@@ -7,8 +7,7 @@ const element = createBrowserRouter([
         path: "/",
         element: <HomeLayout />,
 
-        // nested route render trong <Outlet />
-
+        // Nested route render trong <Outlet />
     },
 ]);
 
