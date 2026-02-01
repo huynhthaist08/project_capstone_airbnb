@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { PUBLIC_PATH } from "./path";
 import HomePage from "@/pages/HomePage/HomePage";
 import SignUpPage from "@/pages/SignUpPage/SignUpPage";
+import LogInPage from "@/pages/LogInPage/LogInPage";
 
 const element = createBrowserRouter([
     // Mỗi object tương ứng với một route <Route />
@@ -22,6 +23,12 @@ const element = createBrowserRouter([
             {
                 path: PUBLIC_PATH.SIGN_UP,
                 element: <SignUpPage />,
+            },
+
+            // Log in page
+            {
+                path: PUBLIC_PATH.LOG_IN,
+                element: <LogInPage />,
             },
         ],
     },

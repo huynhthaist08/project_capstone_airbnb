@@ -10,7 +10,7 @@
 - React Router DOM -> npm install react-router-dom
 - Zod -> npm install zod
 - React icons -> npm install react-icons
-- qs -> npm install qs | npm install -D @types/qs
+- qs -> npm install -D @types/qs
 
 ## Cấu trúc thư mục
 

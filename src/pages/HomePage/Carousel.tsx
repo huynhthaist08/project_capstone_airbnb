@@ -17,7 +17,7 @@ const CarouselBanner = () => {
                         <CarouselItem key={item.id}>
                             <div className="grid grid-cols-1 mt-5 md:grid-cols-2 gap-4">
                                 {/* Left */}
-                                <div className="h-[360px] overflow-hidden rounded-xl">
+                                <div className="h-90 overflow-hidden rounded-xl">
                                     <img
                                         src={item.left.image}
                                         alt={item.left.title}
@@ -26,7 +26,7 @@ const CarouselBanner = () => {
                                 </div>
 
                                 {/* Right */}
-                                <div className="h-[360px] overflow-hidden rounded-xl">
+                                <div className="h-90 overflow-hidden rounded-xl">
                                     <img
                                         src={item.right.image}
                                         alt={item.right.title}

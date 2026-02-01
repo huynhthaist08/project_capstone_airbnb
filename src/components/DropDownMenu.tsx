@@ -7,7 +7,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/core/ui/dropdown-menu";
+import { PUBLIC_PATH } from "@/routes/path";
 import { FaBars } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const DropDownMenu = () => {
     return (
@@ -20,12 +22,22 @@ const DropDownMenu = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>Thông tin cá nhân</DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <a
+                                href="https://www.airbnb.com.vn/help"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Trung tâm hỗ trợ
+                            </a>
+                        </DropdownMenuItem>
                     </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            Đăng nhập hoặc Đăng ký
+                        <DropdownMenuItem asChild>
+                            <Link to={PUBLIC_PATH.SIGN_UP}>
+                                Đăng nhập hoặc Đăng ký
+                            </Link>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>

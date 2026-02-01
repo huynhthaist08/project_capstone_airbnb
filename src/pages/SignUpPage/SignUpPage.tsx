@@ -10,6 +10,7 @@ import {
     CardTitle,
 } from "@/core/ui/card";
 import { PUBLIC_PATH } from "@/routes/path";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const SignUpPage = () => {
     return (
@@ -100,7 +101,7 @@ const SignUpPage = () => {
                                     className="flex-1"
                                 >
                                     <Link to={PUBLIC_PATH.LOG_IN}>
-                                        Đăng nhập →
+                                        Đăng nhập <FaArrowRightLong />
                                     </Link>
                                 </Button>
                             </div>
