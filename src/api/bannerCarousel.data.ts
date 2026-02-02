@@ -5,7 +5,7 @@ import banner4 from "../assets/banners/banner-4.jpg";
 import banner5 from "../assets/banners/banner-5.jpg";
 import banner6 from "../assets/banners/banner-6.jpg";
 
-export const bannerCarousel = [
+export const bannerCarouselData = [
     {
         id: 1,
         left: {

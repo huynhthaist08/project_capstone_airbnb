@@ -1,4 +1,4 @@
-import { bannerCarousel } from "@/api/bannerCarousel";
+import { bannerCarouselData } from "@/api/bannerCarousel.data";
 
 import {
     Carousel,
@@ -13,7 +13,7 @@ const CarouselBanner = () => {
         <div>
             <Carousel>
                 <CarouselContent>
-                    {bannerCarousel.map((item) => (
+                    {bannerCarouselData.map((item) => (
                         <CarouselItem key={item.id}>
                             <div className="grid grid-cols-1 mt-5 md:grid-cols-2 gap-4">
                                 {/* Left */}
