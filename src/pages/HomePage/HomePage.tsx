@@ -1,5 +1,6 @@
 import AnyWhere from "./AnyWhere";
 import CarouselBanner from "./Carousel";
+import ExploreLocation from "./ExploreLocation";
 import SearchBar from "./SearchBar";
 
 const HomePage = () => {
@@ -7,6 +8,7 @@ const HomePage = () => {
         <div>
             <SearchBar />
             <CarouselBanner />
+            <ExploreLocation />
             <AnyWhere />
         </div>
     );
