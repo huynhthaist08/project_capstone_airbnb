@@ -1,3 +1,4 @@
+import AnyWhere from "./AnyWhere";
 import CarouselBanner from "./Carousel";
 import SearchBar from "./SearchBar";
 
@@ -6,6 +7,7 @@ const HomePage = () => {
         <div>
             <SearchBar />
             <CarouselBanner />
+            <AnyWhere />
         </div>
     );
 };
