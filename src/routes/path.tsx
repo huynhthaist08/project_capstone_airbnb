@@ -15,4 +15,5 @@ export const PUBLIC_PATH = {
     LOG_IN: "/dang-nhap",
     ROOMS_BY_LOCATION: "/phong-theo-vi-tri",
     ROOM_DETAIL: "/phong",
+    NOT_FOUND: "*",
 };

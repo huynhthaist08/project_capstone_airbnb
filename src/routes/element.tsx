@@ -9,6 +9,7 @@ import AdminUsersPage from "@/pages/AdminUsersPage/AdminUsersPage";
 import AdminLocationsPage from "@/pages/AdminLocationsPage/AdminLocationsPage";
 import AdminBookingsPage from "@/pages/AdminBookingsPage/AdminBookingsPage";
 import AdminRoomsPage from "@/pages/AdminRoomsPage/AdminRoomsPage";
+import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
 
 const element = createBrowserRouter([
     // Mỗi object tương ứng với một route <Route />
@@ -66,6 +67,11 @@ const element = createBrowserRouter([
                 element: <AdminBookingsPage />,
             },
         ],
+    },
+
+    {
+        path: PUBLIC_PATH.NOT_FOUND,
+        element: <NotFoundPage />,
     },
 ]);
 
