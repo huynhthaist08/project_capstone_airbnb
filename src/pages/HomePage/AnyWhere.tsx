@@ -10,7 +10,7 @@ const AnyWhere = () => {
                     {anyWhereData.map((item) => (
                         <Card
                             key={item.id}
-                            className="overflow-hidden group cursor-pointer"
+                            className="overflow-hidden group cursor-pointer py-0"
                         >
                             <div className="aspect-4/3 overflow-hidden bg-muted">
                                 <img
