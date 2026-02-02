@@ -11,7 +11,7 @@ const AppLayout = () => {
                     <div className="container mx-auto px-4 py-4">
                         <Outlet />
                     </div>
-                    <div style={{ height: "1000px" }}></div>
+                    {/* <div style={{ height: "1000px" }}></div> */}
                 </main>
                 <Footer />
             </div>

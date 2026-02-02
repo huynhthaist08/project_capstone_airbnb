@@ -5,7 +5,7 @@ const AnyWhere = () => {
     return (
         <>
             <section className="py-10">
-                <h2 className="text-2xl font-bold mb-6">Ở bất cứ đâu</h2>
+                <h2 className="text-xl font-semibold mb-4">Ở bất cứ đâu</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {anyWhereData.map((item) => (
                         <Card
