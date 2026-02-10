@@ -10,6 +10,8 @@ import AdminLocationsPage from "@/pages/AdminLocationsPage/AdminLocationsPage";
 import AdminBookingsPage from "@/pages/AdminBookingsPage/AdminBookingsPage";
 import AdminRoomsPage from "@/pages/AdminRoomsPage/AdminRoomsPage";
 import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
+import ExperiencePage from "@/pages/ExperiencePage/ExperiencePage";
+import ServicePage from "@/pages/ServicePage/ServicePage";
 
 const element = createBrowserRouter([
     // Mỗi object tương ứng với một route <Route />
@@ -36,6 +38,18 @@ const element = createBrowserRouter([
             {
                 path: PUBLIC_PATH.LOG_IN,
                 element: <LogInPage />,
+            },
+
+            // Trải nghiệm
+            {
+                path: PUBLIC_PATH.EXPERIENCE,
+                element: <ExperiencePage />,
+            },
+
+            // Dịch vụ
+            {
+                path: PUBLIC_PATH.SERVICE,
+                element: <ServicePage />,
             },
         ],
     },

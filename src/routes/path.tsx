@@ -16,4 +16,11 @@ export const PUBLIC_PATH = {
     ROOMS_BY_LOCATION: "/phong-theo-vi-tri",
     ROOM_DETAIL: "/phong",
     NOT_FOUND: "*",
+
+    EXPERIENCE: "/trai-nghiem",
+    SERVICE: "/dich-vu",
 };
+
+export function roomsByLocationPath(maViTri: number) {
+    return `${PUBLIC_PATH.ROOMS_BY_LOCATION}/${maViTri}`;
+}
