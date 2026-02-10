@@ -55,15 +55,6 @@ const Header = () => {
 
                 {/* Navigation */}
                 <nav className="flex items-center gap-4 [&>a]:text-md [&>a]:p-2">
-                    <a
-                        href="https://www.airbnb.com.vn/host/homes"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium hover:text-primary"
-                    >
-                        Trở thành chủ nhà
-                    </a>
-
                     {navItems.map((item) => (
                         <NavLink
                             key={item.path}
@@ -79,8 +70,21 @@ const Header = () => {
                     ))}
                 </nav>
 
-                {/* Dropdown menu */}
-                <DropDownMenu />
+                <div className="flex items-center gap-4">
+                    <a
+                        href="https://www.airbnb.com.vn/host/homes"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium hover:text-primary px-3 py-2 rounded-full transition"
+                    >
+                        Trở thành chủ nhà
+                    </a>
+
+                    {/* Dropdown menu */}
+                    <div>
+                        <DropDownMenu />
+                    </div>
+                </div>
             </header>
         </div>
     );
