@@ -18,10 +18,11 @@ export const useSignInForm = () => {
     },
     onSuccess: (response) => {
       console.log('Login success response:', response.data)
+      console.log('Full response:', response)
       
-      // Token nằm ở response.data.content.token
-      const token = response.data?.content?.token
-      const user = response.data?.content?.user
+      // CyberSoft API response format
+      const token = response.data?.content?.token || response.data?.token
+      const user = response.data?.content?.user || response.data?.user
       
       if (!token) {
         console.error('NO TOKEN FOUND IN RESPONSE!')
@@ -38,9 +39,13 @@ export const useSignInForm = () => {
     onError: (error: any) => {
       console.error('Login error:', error)
       console.error('Error response:', error.response?.data)
-      console.error('Full error object:', error)
       
-      const message = error.response?.data?.message || error.message || 'Đăng nhập thất bại'
+      // CyberSoft API error format: { statusCode, message, content }
+      const message = error.response?.data?.message || 
+                      error.response?.data?.content ||
+                      error.message || 
+                      'Đăng nhập thất bại'
+      
       toast.error(message)
     },
   })
