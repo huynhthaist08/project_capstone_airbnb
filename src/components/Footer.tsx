@@ -1,6 +1,6 @@
 import googleplay from "../assets/images/google-play.png";
 import appstore from "../assets/images/app-store.png";
-import { gioiThieu, congDong, donTiepKhach, hoTro } from "@/api/footer";
+import { gioiThieu, congDong, donTiepKhach, hoTro } from "@/api/footer.data";
 
 const Footer = () => {
     const clickToAirBnb = () => {

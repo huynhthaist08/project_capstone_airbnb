@@ -13,13 +13,17 @@ export const PUBLIC_PATH = {
     HOME: "/",
     SIGN_UP: "/dang-ky",
     LOG_IN: "/dang-nhap",
-    ROOMS_BY_LOCATION: "/phong-theo-vi-tri",
-    ROOM_DETAIL: "/phong",
+    ROOMS_BY_LOCATION: "/phong-thue/lay-phong-theo-vi-tri",
+    ROOM_DETAIL: "/phong-thue",
     NOT_FOUND: "*",
 
     EXPERIENCE: "/trai-nghiem",
     SERVICE: "/dich-vu",
 };
+
+export function roomDetailPath(id: number) {
+    return `${PUBLIC_PATH.ROOM_DETAIL}/${id}`;
+}
 
 export function roomsByLocationPath(maViTri: number) {
     return `${PUBLIC_PATH.ROOMS_BY_LOCATION}/${maViTri}`;
