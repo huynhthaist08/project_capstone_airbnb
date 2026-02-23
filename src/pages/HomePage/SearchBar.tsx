@@ -1,3 +1,6 @@
+/**
+ * SearchBar: ô tìm kiếm trên trang chủ — chọn vị trí (dropdown từ API vị trí), ngày đến/đi, số khách; nút Tìm kiếm chuyển sang trang phòng theo vị trí.
+ */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";

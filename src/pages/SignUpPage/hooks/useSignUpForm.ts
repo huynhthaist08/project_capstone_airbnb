@@ -1,3 +1,6 @@
+/**
+ * useMutaRegister: hook đăng ký — map form (SignUpFormType) sang payload API, gọi nguoiDungApi.register; thành công thì toast, lỗi thì toast error.
+ */
 import { useMutation } from '@tanstack/react-query'
 import { nguoiDungApi } from '../services'
 import { toast } from 'sonner'

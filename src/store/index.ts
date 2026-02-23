@@ -1,3 +1,7 @@
+/**
+ * store/index.ts
+ * Cấu hình Redux store: gắn auth reducer, export RootState/AppDispatch và hook useAppDispatch/useAppSelector (có type).
+ */
 import { configureStore } from "@reduxjs/toolkit";
 import {
     useDispatch,
@@ -15,6 +19,6 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// sử dụng thay cho useDispatch và useSelector
+// Dùng thay useDispatch/useSelector để có đúng type của store.
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

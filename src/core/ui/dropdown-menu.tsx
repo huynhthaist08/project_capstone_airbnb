@@ -1,3 +1,6 @@
+/**
+ * core/ui/dropdown-menu.tsx — Menu dropdown (Radix): trigger, content, item, separator; dùng cho DropDownMenu header (đăng nhập/đăng ký, user menu).
+ */
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"

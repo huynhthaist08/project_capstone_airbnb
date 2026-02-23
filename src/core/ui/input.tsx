@@ -1,3 +1,6 @@
+/**
+ * core/ui/input.tsx — Ô input dùng chung, style thống nhất (border, focus, disabled, file) và hỗ trợ aria-invalid.
+ */
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

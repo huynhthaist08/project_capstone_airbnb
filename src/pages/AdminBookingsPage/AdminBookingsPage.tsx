@@ -1,3 +1,6 @@
+/**
+ * AdminBookingsPage: trang admin quản lý đặt phòng — bảng danh sách đặt phòng (phân trang client), xóa đặt phòng; gọi API dat-phong.
+ */
 import { Button } from "@/core/ui/button";
 import {
     Table,

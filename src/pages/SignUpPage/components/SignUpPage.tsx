@@ -1,3 +1,6 @@
+/**
+ * SignUpPage: trang đăng ký — form đầy đủ (tên, email, mật khẩu, xác nhận mật khẩu, SĐT, ngày sinh, giới tính), react-hook-form + zod, gọi useMutaRegister; có modal thành công và link sang đăng nhập.
+ */
 import { Link } from "react-router-dom";
 import { Button } from "@/core/ui/button";
 import { Input } from "@/core/ui/input";

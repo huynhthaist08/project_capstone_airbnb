@@ -1,3 +1,6 @@
+/**
+ * DropDownMenu: menu dropdown trên header — khi chưa đăng nhập hiện "Đăng ký"/"Đăng nhập"; khi đã đăng nhập hiện tên user, Trang cá nhân, Đăng xuất. Dùng Redux auth (state.auth).
+ */
 import { Button } from "@/core/ui/button";
 import {
     DropdownMenu,

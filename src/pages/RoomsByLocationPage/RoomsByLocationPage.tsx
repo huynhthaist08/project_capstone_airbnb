@@ -1,3 +1,6 @@
+/**
+ * RoomsByLocationPage: trang danh sách phòng theo vị trí — lấy maViTri từ URL, query ngày/khách từ searchParams; hiển thị tên vị trí và grid card phòng, link sang chi tiết phòng.
+ */
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import PHONG_THUE from "@/api/phong-thue";

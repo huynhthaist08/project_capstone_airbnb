@@ -1,3 +1,8 @@
+/**
+ * api/vi-tri.ts
+ * Module gọi API quản lý vị trí (location): CRUD, phân trang tìm kiếm, upload ảnh.
+ * Dùng cho trang admin vị trí và khi cần danh sách vị trí (ví dụ dropdown, filter).
+ */
 import type { Location, LocationPaginatedParams } from "@/types/location.type";
 import type { PaginatedResponse } from "@/types/user.type";
 import apiInstance from "@/shared/services/api";

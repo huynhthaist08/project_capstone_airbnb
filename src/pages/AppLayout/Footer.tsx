@@ -1,3 +1,6 @@
+/**
+ * Footer: chân trang — các cột link (Giới thiệu, Cộng đồng, Đón tiếp khách, Hỗ trợ) từ footer.data, link app store/google play, ngôn ngữ.
+ */
 import googleplay from "@/assets/images/google-play.png";
 import appstore from "@/assets/images/app-store.png";
 import { gioiThieu, congDong, donTiepKhach, hoTro } from "@/mocks/footer.data";

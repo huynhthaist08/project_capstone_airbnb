@@ -1,3 +1,4 @@
+/** Schema zod cho form đăng nhập: email, password (tối thiểu 6 ký tự). */
 import { z } from 'zod'
 
 export const signInSchema = z.object({

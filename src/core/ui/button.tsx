@@ -1,3 +1,6 @@
+/**
+ * core/ui/button.tsx — Nút bấm dùng chung: nhiều variant (default, outline, ghost, link, destructive) và size (default, xs, sm, lg, icon).
+ */
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"

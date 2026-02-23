@@ -1,11 +1,15 @@
+/**
+ * shared/services/api.ts
+ * Instance Axios dùng chung cho mọi API: tự gắn baseURL, TokenCybersoft và Bearer token từ localStorage.
+ * Interceptor response: khi 401/403 thì xóa token + user và redirect về trang đăng nhập.
+ */
 import { APP_CONFIG } from "@/config";
 import { STORAGE_KEYS, AUTH_USER_KEY } from "@/constants/storageKeys";
 import axios from "axios";
 
 const apiInstance = axios.create();
 
-// Middleware
-// -> Tất cả các request đều sẽ đi qua hàm này
+// Mọi request đều gắn baseURL, header TokenCybersoft và Authorization (Bearer token).
 apiInstance.interceptors.request.use((config) => {
     return {
         ...config,
@@ -21,14 +25,11 @@ apiInstance.interceptors.request.use((config) => {
 });
 
 apiInstance.interceptors.response.use(
-    // Data trả về nếu thành công
     (res) => res,
-
-    // Xử lý lỗi khi gọi API thất bại
     (error) => {
         const status = error.response?.status;
         if (status === 401 || status === 403) {
-            // Token user hết hạn hoặc không đúng
+            // Token hết hạn hoặc không hợp lệ: xóa token + user, chuyển về đăng nhập
             localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
             localStorage.removeItem(AUTH_USER_KEY);
             if (window.location.pathname !== "/dang-nhap") {

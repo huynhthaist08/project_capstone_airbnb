@@ -1,9 +1,4 @@
-// // những path cần người dùng đăng nhập thì mới có thể truy cập đc
-// export const PRIVATE_PATH = {}
-
-// // những path không cần đăng nhập vẫn có thể truy cập đc
-// export const PUBLIC_PATH = {
-//     HOME: '/',
-//     // SIGN_UP: '/sign-up',
-//     // SIGN_IN: '/sign-in',
-// }
+/**
+ * constants/path.ts
+ * File path cũ (đã comment). Route thực tế đang dùng nằm ở routes/path.tsx (PRIVATE_PATH, PUBLIC_PATH).
+ */

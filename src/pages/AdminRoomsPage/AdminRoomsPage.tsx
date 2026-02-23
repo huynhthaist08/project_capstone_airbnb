@@ -1,3 +1,6 @@
+/**
+ * AdminRoomsPage: trang admin quản lý phòng — bảng phân trang + tìm kiếm, thêm/sửa/xóa phòng (form có chọn vị trí); gọi API phong-thue và vi-tri.
+ */
 import { Button } from "@/core/ui/button";
 import { Input } from "@/core/ui/input";
 import {

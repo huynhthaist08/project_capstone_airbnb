@@ -1,3 +1,6 @@
+/**
+ * ExploreLocation: khối "Khám phá điểm đến" — lấy danh sách vị trí phân trang từ API, grid card; click vào card chuyển sang trang phòng theo vị trí.
+ */
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";

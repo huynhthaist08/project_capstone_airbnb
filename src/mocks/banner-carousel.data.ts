@@ -1,3 +1,7 @@
+/**
+ * mocks/banner-carousel.data.ts
+ * Dữ liệu carousel banner trang chủ: từng slide có ảnh trái + ảnh phải và tiêu đề.
+ */
 import banner1 from "../assets/banners/banner-1.jpg";
 import banner2 from "../assets/banners/banner-2.jpg";
 import banner3 from "../assets/banners/banner-3.jpg";

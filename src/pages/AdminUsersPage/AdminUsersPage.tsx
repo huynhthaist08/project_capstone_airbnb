@@ -1,3 +1,6 @@
+/**
+ * AdminUsersPage: trang admin quản lý người dùng — bảng phân trang + tìm kiếm, thêm user (dialog), xóa user; gọi API users/phan-trang-tim-kiem, users (POST/DELETE).
+ */
 import { Button } from "@/core/ui/button";
 import { Input } from "@/core/ui/input";
 import {

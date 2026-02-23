@@ -1,3 +1,6 @@
+/**
+ * RoomDetailPage: trang chi tiết phòng — hiển thị ảnh, tên, mô tả, tiện nghi; form đặt phòng (ngày đến/đi, số khách) và danh sách bình luận; dùng useAuth (AuthContext) để lấy user đặt phòng/bình luận.
+ */
 import PHONG_THUE from "@/api/phong-thue";
 import DAT_PHONG from "@/api/dat-phong";
 import BINH_LUAN from "@/api/binh-luan";

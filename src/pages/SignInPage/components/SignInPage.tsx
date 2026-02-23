@@ -1,3 +1,6 @@
+/**
+ * SignInPage: trang đăng nhập — form email + mật khẩu (react-hook-form + zod), gọi useSignInForm (API signin + Redux setCredentials), link sang đăng ký.
+ */
 import { Button } from "@/core/ui/button";
 import {
     Card,

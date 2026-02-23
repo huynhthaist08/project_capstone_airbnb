@@ -1,3 +1,7 @@
+/**
+ * routes/element.tsx
+ * Định nghĩa cấu hình router (createBrowserRouter): layout chính (AppLayout) với các route con công khai (home, đăng ký/đăng nhập, trải nghiệm, dịch vụ, phòng theo vị trí, chi tiết phòng); layout admin với các route quản lý; và 404.
+ */
 import AppLayout from "@/pages/AppLayout/AppLayout";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PRIVATE_PATH, PUBLIC_PATH } from "./path";
@@ -16,51 +20,42 @@ import RoomsByLocationPage from "@/pages/RoomsByLocationPage/RoomsByLocationPage
 import RoomDetailPage from "@/pages/RoomDetailPage/RoomDetailPage";
 
 const element = createBrowserRouter([
-    // Mỗi object tương ứng với một route <Route />
-    // Public path
     {
         path: "/",
         element: <AppLayout />,
 
         // Nested route render trong <Outlet />
         children: [
-            // Home page
             {
                 path: PUBLIC_PATH.HOME,
                 element: <HomePage />,
             },
 
-            // Sign up page
             {
                 path: PUBLIC_PATH.SIGN_UP,
                 element: <SignUpPage />,
             },
 
-            // Log in page
             {
                 path: PUBLIC_PATH.SIGN_IN,
                 element: <SignInPage />,
             },
 
-            // Trải nghiệm
             {
                 path: PUBLIC_PATH.EXPERIENCE,
                 element: <ExperiencePage />,
             },
 
-            // Dịch vụ
             {
                 path: PUBLIC_PATH.SERVICE,
                 element: <ServicePage />,
             },
 
-            // Phòng thuê theo vị trí
             {
                 path: `${PUBLIC_PATH.ROOMS_BY_LOCATION}/:maViTri`,
                 element: <RoomsByLocationPage />,
             },
 
-            // Trang chi tiết phòng
             {
                 path: `${PUBLIC_PATH.ROOM_DETAIL}/:id`,
                 element: <RoomDetailPage />,
@@ -68,7 +63,6 @@ const element = createBrowserRouter([
         ],
     },
 
-    // Private path
     {
         path: PRIVATE_PATH.ADMIN,
         element: <AdminLayout />,

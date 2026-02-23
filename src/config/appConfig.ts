@@ -1,10 +1,13 @@
+/**
+ * config/appConfig.ts
+ * Cấu hình app: chiều cao header, BASE_URL và TOKEN_CYBERSOFT từ .env, tài khoản admin demo (đăng nhập local không gọi API).
+ */
 export const APP_CONFIG = {
-    headerHeight: 80, // set chiều cao Header
+    headerHeight: 80,
 
     TOKEN_CYBERSOFT: import.meta.env.VITE_TOKEN_CYBERSOFT,
     BASE_URL: import.meta.env.VITE_BASE_URL,
 
-    // Tài khoản admin mặc định dùng cho FE demo (không phụ thuộc Swagger)
     DEFAULT_ADMIN_ACCOUNT: {
         taiKhoan: "admin_demo",
         matKhau: "Admin@123",

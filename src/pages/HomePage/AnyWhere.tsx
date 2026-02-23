@@ -1,3 +1,6 @@
+/**
+ * AnyWhere: khối "Ở bất cứ đâu" — grid card từ anyWhereData (ảnh + tiêu đề), dùng cho trang chủ.
+ */
 import { anyWhereData } from "@/mocks/any-where.data";
 import { Card, CardContent } from "@/core/ui/card";
 

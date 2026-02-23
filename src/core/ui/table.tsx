@@ -1,3 +1,6 @@
+/**
+ * core/ui/table.tsx — Bảng dữ liệu: Table, TableHeader, TableBody, TableRow, TableCell; dùng trong trang admin (user, location, room, booking).
+ */
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

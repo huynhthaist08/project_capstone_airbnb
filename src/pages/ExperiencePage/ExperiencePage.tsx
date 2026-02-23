@@ -1,3 +1,6 @@
+/**
+ * ExperiencePage: trang Trải nghiệm — các section (Airbnb Original, Diễn ra hôm nay, ...) với danh sách ảnh trượt ngang (picsum placeholder).
+ */
 import { FaArrowRight, FaHeart, FaRegStar } from "react-icons/fa6";
 
 const images = Array.from(

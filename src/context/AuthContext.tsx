@@ -1,3 +1,8 @@
+/**
+ * context/AuthContext.tsx
+ * Context cung cấp trạng thái đăng nhập (user, token) và hàm login/signup/logout/setUser.
+ * Hỗ trợ đăng nhập local với tài khoản admin demo (không gọi API). Các component dùng useAuth() để lấy/sử dụng auth.
+ */
 import React, {
     createContext,
     useCallback,

@@ -1,3 +1,6 @@
+/**
+ * core/ui/carousel.tsx — Carousel (Embla): trượt slide, nút prev/next, dots; dùng cho banner trang chủ và các khối trượt ảnh.
+ */
 import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,

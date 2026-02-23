@@ -1,3 +1,4 @@
+/** API đăng ký: gọi POST /auth/signup với payload user (bỏ confirmPassword). */
 import api from '@/shared/services/api'
 import type { SignUpFormType } from '../schema'
 

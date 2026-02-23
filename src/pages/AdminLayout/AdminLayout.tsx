@@ -1,3 +1,6 @@
+/**
+ * AdminLayout: layout cho khu vực admin — header (logo, nút Đăng xuất), sidebar nav (Quản lý người dùng, vị trí, phòng, đặt phòng), Outlet cho nội dung từng trang admin.
+ */
 import logoImg from "@/assets/images/logo.png";
 import { Button } from "@/core/ui/button";
 import { PRIVATE_PATH, PUBLIC_PATH } from "@/routes/path";
@@ -83,5 +86,3 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
-
-// Admin layout gốc, chứa các layout admin khác

@@ -1,3 +1,6 @@
+/**
+ * core/ui/card.tsx — Thẻ nội dung: Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter dùng bọc form/block nội dung.
+ */
 import * as React from "react";
 
 import { cn } from "@/lib/utils";

@@ -1,3 +1,6 @@
+/**
+ * Header: thanh điều hướng trên cùng — logo, nav (Nơi lưu trú, Trải nghiệm, Dịch vụ), link "Trở thành chủ nhà", dropdown đăng nhập/đăng ký.
+ */
 import { APP_CONFIG } from "@/config";
 import { PUBLIC_PATH } from "@/routes/path";
 import { Link, NavLink } from "react-router-dom";

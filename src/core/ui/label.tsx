@@ -1,3 +1,6 @@
+/**
+ * core/ui/label.tsx — Nhãn cho form (Radix Label), dùng kèm Input/Select để accessibility.
+ */
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 

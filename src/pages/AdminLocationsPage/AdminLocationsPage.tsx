@@ -1,3 +1,6 @@
+/**
+ * AdminLocationsPage: trang admin quản lý vị trí — bảng phân trang + tìm kiếm, thêm/sửa/xóa vị trí qua dialog; gọi API vi-tri (LOCATION).
+ */
 import { Button } from "@/core/ui/button";
 import { Input } from "@/core/ui/input";
 import {

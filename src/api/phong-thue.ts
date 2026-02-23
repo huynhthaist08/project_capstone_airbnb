@@ -1,3 +1,8 @@
+/**
+ * api/phong-thue.ts
+ * Module gọi API phòng thuê: lấy danh sách, theo vị trí, phân trang, CRUD, upload ảnh.
+ * Dùng cho trang chủ, trang phòng theo vị trí, chi tiết phòng và admin quản lý phòng.
+ */
 import apiInstance from "@/shared/services/api";
 
 import type { PaginatedResponse } from "@/types/user.type";

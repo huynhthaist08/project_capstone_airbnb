@@ -1,3 +1,6 @@
+/**
+ * core/ui/spinner.tsx — Icon loading xoay tròn, dùng khi đang tải dữ liệu hoặc submit form.
+ */
 import { Loader2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"

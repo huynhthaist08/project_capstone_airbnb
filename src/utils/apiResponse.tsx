@@ -1,7 +1,9 @@
+/**
+ * utils/apiResponse.tsx
+ * Hàm chuẩn hóa response từ API Cybersoft (format không thống nhất: content/data, có thể lồng nhau).
+ * getContent: lấy object đơn. getContentArray: lấy mảng. getPaginatedData: lấy data phân trang. getAny: lấy field theo nhiều tên key (camel/snake).
+ */
 import type { AxiosResponse } from "axios";
-
-//Chuẩn hóa response từ Cybersoft API.
-//API trả về: { data: { content: T } } hoặc { data: T } hoặc { content: { data: T[] } } cho phân trang.
 
 export function getContent<T>(
     res: AxiosResponse<{ content?: T }> | undefined,
@@ -10,8 +12,6 @@ export function getContent<T>(
     const d = res.data as { content?: T; data?: T };
     return d.content ?? d.data;
 }
-
-// Lấy mảng từ response (content có thể là mảng hoặc object có .data).
 
 export function getContentArray<T>(
     res: AxiosResponse<unknown> | undefined,
@@ -27,8 +27,6 @@ export function getContentArray<T>(
     return [];
 }
 
-// Lấy dữ liệu phân trang: { pageIndex, pageSize, totalPage, totalRow, data: T[] }.
-// API Cybersoft: content có thể là { data: T[], pageIndex, pageSize, totalPage, totalRow } hoặc trực tiếp mảng T[].
 export function getPaginatedData<T>(res: AxiosResponse<unknown> | undefined): {
     data: T[];
     pageIndex: number;
@@ -78,7 +76,6 @@ export function getPaginatedData<T>(res: AxiosResponse<unknown> | undefined): {
     };
 }
 
-// Lấy giá trị từ object với nhiều key có thể (API có thể trả về tenPhong hoặc ten_phong).
 export function getAny(
     obj: Record<string, unknown> | null | undefined,
     ...keys: string[]

@@ -1,3 +1,8 @@
+/**
+ * utils/createQueryString.ts
+ * Chuyển object thành chuỗi query (?key=value&...) để gắn vào URL khi gọi API phân trang/tìm kiếm.
+ * Loại bỏ giá trị rỗng và null, dùng thư viện qs.
+ */
 import { stringify } from "qs";
 
 export const createQueryString = (obj: Record<string, unknown>) => {

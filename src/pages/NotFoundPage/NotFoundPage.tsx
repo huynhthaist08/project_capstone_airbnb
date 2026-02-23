@@ -1,3 +1,6 @@
+/**
+ * NotFoundPage: trang 404 — thông báo "Trang không tồn tại", nút Quay lại và Về trang chủ.
+ */
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/core/ui/button";
 

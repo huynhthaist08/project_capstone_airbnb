@@ -1,3 +1,6 @@
+/**
+ * useSignInForm: hook đăng nhập — gọi API signin (nguoiDungApi.logIn), khi thành công dispatch setCredentials (Redux + localStorage) rồi chuyển về trang chủ, toast thông báo.
+ */
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'

@@ -1,3 +1,4 @@
+/** Schema zod cho form đăng ký: name, email, password, confirmPassword, phone, birthday, gender; kiểm tra password trùng confirmPassword. */
 import { z } from 'zod'
 
 export const signUpSchema = z.object({

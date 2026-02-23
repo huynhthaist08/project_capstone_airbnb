@@ -1,3 +1,8 @@
+/**
+ * api/dat-phong.ts
+ * Module gọi API đặt phòng: lấy danh sách, theo user, tạo/cập nhật/xóa đặt phòng.
+ * Dùng khi user đặt phòng (RoomDetailPage) và trang admin quản lý đặt phòng.
+ */
 import type { Booking, CreateBookingPayload } from "@/types/booking.type";
 import apiInstance from "@/shared/services/api";
 
