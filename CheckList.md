@@ -3,7 +3,7 @@
 - ReactJS + Vite -> npm create vite@latest
 - TypeScript
 - TailwindCSS -> npm install tailwindcss @tailwindcss/vite
-- Redux Toolkit
+- Redux Toolkit -> npm install react-redux | npm install @reduxjs/toolkit
 - Shadcn
 - Axios -> npm install axios
 - Tanstack React Query -> npm install @tanstack/react-query
@@ -11,6 +11,9 @@
 - Zod -> npm install zod
 - React icons -> npm install react-icons
 - qs -> npm install -D @types/qs
+- sonner -> npm install sonner
+- react hook form -> npm install react-hook-form
+- hookform/resolver -> npm install @hookform/resolvers
 
 ## Cấu trúc thư mục
 

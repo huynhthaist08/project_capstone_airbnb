@@ -7,8 +7,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/core/ui/dropdown-menu";
-import { PUBLIC_PATH } from "@/routes/path";
-import { FaBars } from "react-icons/fa6";
+import { PRIVATE_PATH, PUBLIC_PATH } from "@/routes/path";
+import { FaBars, FaCircleUser } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "@/store/auth.slice";
@@ -17,7 +17,9 @@ import type { RootState } from "@/store";
 const DropDownMenu = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+    const { isAuthenticated, user } = useSelector(
+        (state: RootState) => state.auth,
+    );
 
     const handleLogout = () => {
         dispatch(logout());
@@ -29,7 +31,11 @@ const DropDownMenu = () => {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant={"outline"}>
-                        <FaBars />
+                        {isAuthenticated && user ? (
+                            <FaCircleUser />
+                        ) : (
+                            <FaBars />
+                        )}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -42,6 +48,15 @@ const DropDownMenu = () => {
                             <DropdownMenuSeparator />
                             {/* Menu items */}
                             <DropdownMenuGroup>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        navigate(
+                                            `${PRIVATE_PATH.PROFILE}/${user.id}`,
+                                        )
+                                    }
+                                >
+                                    Trang cá nhân
+                                </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
                                     <a
                                         href="https://www.airbnb.com.vn/help"
@@ -77,7 +92,12 @@ const DropDownMenu = () => {
                             <DropdownMenuGroup>
                                 <DropdownMenuItem asChild>
                                     <Link to={PUBLIC_PATH.SIGN_UP}>
-                                        Đăng nhập hoặc Đăng ký
+                                        Đăng ký
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link to={PUBLIC_PATH.SIGN_IN}>
+                                        Đăng nhập
                                     </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>

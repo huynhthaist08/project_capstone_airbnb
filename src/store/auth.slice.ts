@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { STORAGE_KEYS } from "@/constants";
+import { STORAGE_KEYS, AUTH_USER_KEY } from "@/constants";
 
 type UserInfo = {
     id: number;
@@ -18,12 +18,26 @@ type AuthState = {
     user?: UserInfo | null;
 };
 
+const persistedToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+let persistedUser: UserInfo | null = null;
+try {
+    const userStr = localStorage.getItem(AUTH_USER_KEY);
+    if (userStr) {
+        persistedUser = JSON.parse(userStr) as UserInfo;
+    }
+} catch {
+    // Nếu parse lỗi thì clear để tránh crash
+    localStorage.removeItem(AUTH_USER_KEY);
+    persistedUser = null;
+}
+
 const initialState: AuthState = {
-    // kiểm tea xem có token trong localstorage để xác định trạng thái đăng nhập
-    isAuthenticated: !!localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN),
-    //lấy token từ localstorage khi khởi tạ state
-    accessToken: localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN),
-    user: null,
+    // kiểm tra xem có token trong localstorage để xác định trạng thái đăng nhập
+    isAuthenticated: !!persistedToken,
+    // lấy token & user từ localstorage khi khởi tạo state
+    accessToken: persistedToken,
+    user: persistedUser,
 };
 
 export const authSlice = createSlice({
@@ -41,15 +55,26 @@ export const authSlice = createSlice({
                 STORAGE_KEYS.ACCESS_TOKEN,
                 action.payload.token,
             );
+            if (action.payload.user) {
+                localStorage.setItem(
+                    AUTH_USER_KEY,
+                    JSON.stringify(action.payload.user),
+                );
+            }
+        },
+        updateUser: (state, action: PayloadAction<UserInfo>) => {
+            state.user = action.payload;
+            localStorage.setItem(AUTH_USER_KEY, JSON.stringify(action.payload));
         },
         logout: (state) => {
             state.accessToken = null;
             state.isAuthenticated = false;
             state.user = null;
             localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+            localStorage.removeItem(AUTH_USER_KEY);
         },
     },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, updateUser, logout } = authSlice.actions;
 export const authReducer = authSlice.reducer;

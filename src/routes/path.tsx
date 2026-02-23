@@ -12,7 +12,7 @@ export const PRIVATE_PATH = {
 export const PUBLIC_PATH = {
     HOME: "/",
     SIGN_UP: "/dang-ky",
-    LOG_IN: "/dang-nhap",
+    SIGN_IN: "/dang-nhap",
     ROOMS_BY_LOCATION: "/phong-thue/lay-phong-theo-vi-tri",
     ROOM_DETAIL: "/phong-thue",
     NOT_FOUND: "*",

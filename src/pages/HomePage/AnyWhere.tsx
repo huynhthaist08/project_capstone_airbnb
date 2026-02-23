@@ -1,4 +1,4 @@
-import { anyWhereData } from "@/api/anyWhere.data";
+import { anyWhereData } from "@/mocks/any-where.data";
 import { Card, CardContent } from "@/core/ui/card";
 
 const AnyWhere = () => {

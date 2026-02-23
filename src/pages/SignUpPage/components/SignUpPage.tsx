@@ -22,7 +22,11 @@ const SignUpPage = () => {
     const { mutate, isPending } = useMutaRegister();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormType>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<SignUpFormType>({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
             name: "",
@@ -40,7 +44,7 @@ const SignUpPage = () => {
         mutate(payload, {
             onSuccess: () => {
                 setShowSuccessModal(true);
-            }
+            },
         });
     };
 
@@ -56,7 +60,10 @@ const SignUpPage = () => {
                     </CardHeader>
 
                     <CardContent>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="space-y-4"
+                        >
                             {/* Name */}
                             <div className="space-y-2">
                                 <Label htmlFor="name">Họ tên</Label>
@@ -64,9 +71,13 @@ const SignUpPage = () => {
                                     id="name"
                                     type="text"
                                     placeholder="Họ tên"
-                                    {...register('name')}
+                                    {...register("name")}
                                 />
-                                {errors.name && <span className="text-red-500 text-sm">{errors.name.message}</span>}
+                                {errors.name && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.name.message}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Email */}
@@ -76,9 +87,13 @@ const SignUpPage = () => {
                                     id="email"
                                     type="email"
                                     placeholder="Email"
-                                    {...register('email')}
+                                    {...register("email")}
                                 />
-                                {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
+                                {errors.email && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.email.message}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Password */}
@@ -88,9 +103,13 @@ const SignUpPage = () => {
                                     id="password"
                                     type="password"
                                     placeholder="Mật khẩu"
-                                    {...register('password')}
+                                    {...register("password")}
                                 />
-                                {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
+                                {errors.password && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.password.message}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Confirm Password */}
@@ -102,9 +121,13 @@ const SignUpPage = () => {
                                     id="confirmPassword"
                                     type="password"
                                     placeholder="Nhập lại mật khẩu"
-                                    {...register('confirmPassword')}
+                                    {...register("confirmPassword")}
                                 />
-                                {errors.confirmPassword && <span className="text-red-500 text-sm">{errors.confirmPassword.message}</span>}
+                                {errors.confirmPassword && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.confirmPassword.message}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Phone */}
@@ -114,9 +137,13 @@ const SignUpPage = () => {
                                     id="phone"
                                     type="tel"
                                     placeholder="Số điện thoại"
-                                    {...register('phone')}
+                                    {...register("phone")}
                                 />
-                                {errors.phone && <span className="text-red-500 text-sm">{errors.phone.message}</span>}
+                                {errors.phone && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.phone.message}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Birthday */}
@@ -125,9 +152,13 @@ const SignUpPage = () => {
                                 <Input
                                     id="birthday"
                                     type="date"
-                                    {...register('birthday')}
+                                    {...register("birthday")}
                                 />
-                                {errors.birthday && <span className="text-red-500 text-sm">{errors.birthday.message}</span>}
+                                {errors.birthday && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.birthday.message}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Gender */}
@@ -136,21 +167,29 @@ const SignUpPage = () => {
                                 <select
                                     id="gender"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    {...register('gender', {
-                                        setValueAs: (v) => v === 'true'
+                                    {...register("gender", {
+                                        setValueAs: (v) => v === "true",
                                     })}
                                 >
                                     <option value="">Chọn giới tính</option>
                                     <option value="true">Nam</option>
                                     <option value="false">Nữ</option>
                                 </select>
-                                {errors.gender && <span className="text-red-500 text-sm">{errors.gender.message}</span>}
+                                {errors.gender && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.gender.message}
+                                    </span>
+                                )}
                             </div>
 
                             {/* Actions */}
                             <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                                <Button type="submit" className="flex-1" disabled={isPending}>
-                                    {isPending ? 'Đang xử lý...' : 'Đăng ký'}
+                                <Button
+                                    type="submit"
+                                    className="flex-1"
+                                    disabled={isPending}
+                                >
+                                    {isPending ? "Đang xử lý..." : "Đăng ký"}
                                 </Button>
 
                                 <Button
@@ -159,7 +198,7 @@ const SignUpPage = () => {
                                     asChild
                                     className="flex-1"
                                 >
-                                    <Link to={PUBLIC_PATH.LOG_IN}>
+                                    <Link to={PUBLIC_PATH.SIGN_IN}>
                                         Đăng nhập <FaArrowRightLong />
                                     </Link>
                                 </Button>
@@ -174,10 +213,14 @@ const SignUpPage = () => {
                         <div className="bg-white rounded-lg shadow-2xl p-8 w-80 text-center pointer-events-auto">
                             <div className="flex justify-center mb-4">
                                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                                    <span className="text-2xl text-green-600">✓</span>
+                                    <span className="text-2xl text-green-600">
+                                        ✓
+                                    </span>
                                 </div>
                             </div>
-                            <h2 className="text-xl font-bold text-gray-900 mb-2">Đăng ký thành công!</h2>
+                            <h2 className="text-xl font-bold text-gray-900 mb-2">
+                                Đăng ký thành công!
+                            </h2>
                             <p className="text-sm text-gray-600 mb-6">
                                 Tài khoản của bạn đã được tạo.
                             </p>

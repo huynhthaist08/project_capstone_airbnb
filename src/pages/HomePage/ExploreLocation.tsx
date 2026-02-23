@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/core/ui/card";
 import { Button } from "@/core/ui/button";
 import { roomsByLocationPath } from "@/routes/path";
-import LOCATION from "@/api/locations";
+import LOCATION from "@/api/vi-tri";
 import { getPaginatedData } from "@/utils/apiResponse";
 
 type LocationItem = {

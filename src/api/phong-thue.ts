@@ -1,12 +1,12 @@
 import apiInstance from "@/shared/services/api";
 
-import type { PaginatedResponse } from "@/@types/user.type";
+import type { PaginatedResponse } from "@/types/user.type";
 import { createQueryString } from "@/utils/createQueryString";
 import type {
     Room,
     RoomByLocationParams,
     RoomPaginatedParams,
-} from "@/@types/room.type";
+} from "@/types/room.type";
 
 const PHONG_THUE = {
     getAll: () => apiInstance.get<{ content: Room[] }>("/phong-thue"),

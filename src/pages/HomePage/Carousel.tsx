@@ -1,4 +1,4 @@
-import { bannerCarouselData } from "@/api/bannerCarousel.data";
+import { bannerCarouselData } from "@/mocks/banner-carousel.data";
 
 import {
     Carousel,

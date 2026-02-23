@@ -8,3 +8,11 @@ export type SignUp = {
     gender: boolean;
     role: string;
 };
+
+export type SignUpPayload = {
+    taiKhoan: string;
+    matKhau: string;
+    hoTen: string;
+    email: string;
+    soDt: string;
+};

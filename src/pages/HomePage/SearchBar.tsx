@@ -6,8 +6,8 @@ import { Input } from "@/core/ui/input";
 import { Search } from "lucide-react";
 
 import { roomsByLocationPath } from "@/routes/path";
-import LOCATION from "@/api/locations";
-import type { Location } from "@/@types/location.type";
+import LOCATION from "@/api/vi-tri";
+import type { Location } from "@/types/location.type";
 
 const SearchBar = () => {
     const navigate = useNavigate();
@@ -28,10 +28,9 @@ const SearchBar = () => {
     const filtered = keyword.trim()
         ? locationList.filter((loc) => {
               const q = keyword.toLowerCase();
-              return (
-                  loc.tenViTri.toLowerCase().includes(q) ||
-                  loc.tinhThanh.toLowerCase().includes(q)
-              );
+              const tenViTri = (loc.tenViTri ?? "").toLowerCase();
+              const tinhThanh = (loc.tinhThanh ?? "").toLowerCase();
+              return tenViTri.includes(q) || tinhThanh.includes(q);
           })
         : locationList.slice(0, 10);
 
@@ -64,7 +63,7 @@ const SearchBar = () => {
                 className="flex flex-col sm:flex-row items-center gap-2 p-6 rounded-full border bg-background shadow-lg"
             >
                 {/* Location */}
-                <div className="flex-1">
+                <div className="flex-1 relative">
                     <Input
                         placeholder="Địa điểm"
                         value={keyword}

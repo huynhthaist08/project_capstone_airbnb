@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PRIVATE_PATH, PUBLIC_PATH } from "./path";
 import HomePage from "@/pages/HomePage/HomePage";
 import { SignUpPage } from "@/pages/SignUpPage";
-import { LogInPage } from "@/pages/LogInPage";
+import SignInPage from "@/pages/SignInPage/components/SignInPage";
 import AdminLayout from "@/pages/AdminLayout/AdminLayout";
 import AdminUsersPage from "@/pages/AdminUsersPage/AdminUsersPage";
 import AdminLocationsPage from "@/pages/AdminLocationsPage/AdminLocationsPage";
@@ -13,6 +13,7 @@ import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
 import ExperiencePage from "@/pages/ExperiencePage/ExperiencePage";
 import ServicePage from "@/pages/ServicePage/ServicePage";
 import RoomsByLocationPage from "@/pages/RoomsByLocationPage/RoomsByLocationPage";
+import RoomDetailPage from "@/pages/RoomDetailPage/RoomDetailPage";
 
 const element = createBrowserRouter([
     // Mỗi object tương ứng với một route <Route />
@@ -37,8 +38,8 @@ const element = createBrowserRouter([
 
             // Log in page
             {
-                path: PUBLIC_PATH.LOG_IN,
-                element: <LogInPage />,
+                path: PUBLIC_PATH.SIGN_IN,
+                element: <SignInPage />,
             },
 
             // Trải nghiệm
@@ -62,6 +63,7 @@ const element = createBrowserRouter([
             // Trang chi tiết phòng
             {
                 path: `${PUBLIC_PATH.ROOM_DETAIL}/:id`,
+                element: <RoomDetailPage />,
             },
         ],
     },

@@ -1,11 +1,11 @@
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import PHONG_THUE from "@/api/phong-thue";
-import LOCATION from "@/api/locations";
+import LOCATION from "@/api/vi-tri";
 import { Card, CardContent } from "@/core/ui/card";
 import { getAny, getContent, getContentArray } from "@/utils/apiResponse";
 import { roomDetailPath } from "@/routes/path";
-import type { Room } from "@/@types/room.type";
+import type { Room } from "@/types/room.type";
 
 const RoomsByLocationPage = () => {
     const { maViTri } = useParams<{ maViTri: string }>();
@@ -136,7 +136,7 @@ const RoomsByLocationPage = () => {
 
                         return (
                             <Link key={room.id} to={roomDetailPath(room.id)}>
-                                <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                                <Card className="overflow-hidden hover:shadow-md transition-shadow py-0">
                                     <div className="aspect-4/3 bg-muted overflow-hidden">
                                         {hinhAnh ? (
                                             <img
@@ -159,9 +159,8 @@ const RoomsByLocationPage = () => {
                                         <p className="text-sm text-muted-foreground">
                                             {khach} khách · {phongNgu} phòng ngủ
                                             · {giuong} giường · {phongTam} phòng
-                                            tắm
+                                            tắm{" "}
                                         </p>
-
                                         {tienNghi.length > 0 && (
                                             <p className="text-sm text-muted-foreground">
                                                 {tienNghi.join(" · ")}
