@@ -2,6 +2,8 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
 
+// AppLayout: Layout khung chính của ứng dụng, cố định Header/Footer
+// và render nội dung trang con thông qua `<Outlet />` của React Router.
 const AppLayout = () => {
     return (
         <div className="min-h-dvh flex flex-col">
@@ -19,5 +21,3 @@ const AppLayout = () => {
 };
 
 export default AppLayout;
-
-// AppLayout: Layout gốc chứa Header và Footer cho cả App

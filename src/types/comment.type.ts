@@ -1,3 +1,4 @@
+// Định nghĩa kiểu dữ liệu bình luận (Comment) và payload tạo bình luận mới.
 export type Comment = {
     id: number;
     maPhong: number;
@@ -7,6 +8,7 @@ export type Comment = {
     saoBinhLuan?: number;
 };
 
+// Payload gửi lên API khi người dùng thêm bình luận cho phòng.
 export type CreateCommentPayload = {
     maPhong: number;
     maNguoiDung: number;
@@ -14,5 +16,3 @@ export type CreateCommentPayload = {
     noiDung: string;
     saoBinhLuan: number;
 };
-
-// juan

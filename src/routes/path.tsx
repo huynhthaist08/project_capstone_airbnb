@@ -1,4 +1,4 @@
-// Private path: Những path cần người dùng đăng nhập thì mới có thể truy cập được
+// PRIVATE_PATH: Các route yêu cầu người dùng đã đăng nhập (protected routes).
 export const PRIVATE_PATH = {
     PROFILE: "/profile",
     ADMIN: "/admin",
@@ -8,7 +8,7 @@ export const PRIVATE_PATH = {
     ADMIN_BOOKINGS: "/admin/QuanLyDatPhong",
 };
 
-// Public path: Những path không cần đăng nhập vẫn có thể truy cập được
+// PUBLIC_PATH: Các route công khai, người dùng không cần đăng nhập vẫn truy cập được.
 export const PUBLIC_PATH = {
     HOME: "/",
     SIGN_UP: "/dang-ky",
@@ -21,10 +21,12 @@ export const PUBLIC_PATH = {
     SERVICE: "/dich-vu",
 };
 
+// roomDetailPath: Helper build URL chi tiết phòng theo `id` phòng.
 export function roomDetailPath(id: number) {
     return `${PUBLIC_PATH.ROOM_DETAIL}/${id}`;
 }
 
+// roomsByLocationPath: Helper build URL danh sách phòng theo `maViTri` (id vị trí).
 export function roomsByLocationPath(maViTri: number) {
     return `${PUBLIC_PATH.ROOMS_BY_LOCATION}/${maViTri}`;
 }

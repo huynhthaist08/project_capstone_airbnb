@@ -1,3 +1,4 @@
+// Định nghĩa kiểu dữ liệu người dùng (User) và các kiểu hỗ trợ phân trang dùng chung.
 export type User = {
     id: number;
     name: string;
@@ -15,6 +16,7 @@ export type UserPaginatedParams = {
     keyword?: string;
 };
 
+// PaginatedResponse: kiểu response chuẩn cho các API có phân trang.
 export type PaginatedResponse<T> = {
     pageIndex: number;
     pageSize: number;
@@ -22,5 +24,3 @@ export type PaginatedResponse<T> = {
     totalPage: number;
     data: T[];
 };
-
-// xem lai

@@ -1,3 +1,4 @@
+// Định nghĩa payload auth (đăng ký/đăng nhập) và response trả về từ server.
 export interface SignUpPayload {
     taiKhoan: string;
     matKhau: string;
@@ -11,6 +12,7 @@ export interface SignInPayload {
     matKhau: string;
 }
 
+// AuthResponse: cấu trúc dữ liệu cho response đăng nhập, gồm accessToken và thông tin user.
 export interface AuthResponse {
     accessToken: string;
     user: {
@@ -25,5 +27,3 @@ export interface AuthResponse {
         role?: string;
     };
 }
-
-// xem lai

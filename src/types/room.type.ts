@@ -1,3 +1,4 @@
+// Định nghĩa kiểu dữ liệu phòng (Room) và các tham số lọc/phân trang liên quan đến phòng.
 export type Room = {
     id: number;
     tenPhong: string;
@@ -20,14 +21,14 @@ export type Room = {
     hinhAnh: string;
 };
 
+// Tham số khi gọi API lấy phòng theo vị trí.
 export type RoomByLocationParams = {
     maViTri: number;
 };
 
+// Tham số phân trang khi lấy danh sách phòng.
 export type RoomPaginatedParams = {
     pageIndex: number;
     pageSize: number;
     keyword: string;
 };
-
-// juan

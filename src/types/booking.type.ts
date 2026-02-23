@@ -1,3 +1,4 @@
+// Định nghĩa kiểu dữ liệu cho một lượt đặt phòng (Booking) và payload khi tạo mới.
 export type Booking = {
     id: number;
     maPhong: number;
@@ -7,6 +8,7 @@ export type Booking = {
     maNguoiDung: number;
 };
 
+// Payload gửi lên API khi tạo mới một đặt phòng.
 export type CreateBookingPayload = {
     maPhong: number;
     ngayDen: string;
@@ -14,5 +16,3 @@ export type CreateBookingPayload = {
     soLuongKhach: number;
     maNguoiDung: number;
 };
-
-// juan
