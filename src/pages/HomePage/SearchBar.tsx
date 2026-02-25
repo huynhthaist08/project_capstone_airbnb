@@ -20,6 +20,7 @@ const SearchBar = () => {
     const [ngayDen, setNgayDen] = useState("");
     const [ngayDi, setNgayDi] = useState("");
     const [soKhach, setSoKhach] = useState(1);
+    const [error, setError] = useState<string | null>(null);
 
     const { data } = useQuery({
         queryKey: ["vi-tri-list"],
@@ -45,8 +46,42 @@ const SearchBar = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        const maViTri = selectedId ?? filtered[0]?.id;
-        if (!maViTri) return;
+        // #region agent log
+        fetch(
+            "http://127.0.0.1:7242/ingest/63ff0b0f-a8bb-4ee4-a272-70366248b530",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Debug-Session-Id": "367446",
+                },
+                body: JSON.stringify({
+                    sessionId: "367446",
+                    runId: "searchbar-layout",
+                    hypothesisId: "layout-1",
+                    location: "SearchBar.tsx:handleSubmit",
+                    message: "Search submit",
+                    data: { keyword, selectedId, ngayDen, ngayDi, soKhach },
+                    timestamp: Date.now(),
+                }),
+            },
+        ).catch(() => {});
+        // #endregion agent log
+
+        // Yêu cầu: phải chọn vị trí và nhập ngày đến/ngày đi trước khi tìm
+        if (!selectedId) {
+            setError("Vui lòng chọn địa điểm trước khi tìm kiếm.");
+            return;
+        }
+
+        if (!ngayDen || !ngayDi) {
+            setError("Vui lòng chọn ngày đến và ngày đi.");
+            return;
+        }
+
+        setError(null);
+
+        const maViTri = selectedId;
 
         const params = new URLSearchParams();
         if (ngayDen) params.set("ngayDen", ngayDen);
@@ -130,6 +165,13 @@ const SearchBar = () => {
                     <Search className="size-5" />
                 </Button>
             </form>
+
+            {/* Error message */}
+            {error && (
+                <p className="mt-2 text-center text-xs text-destructive">
+                    {error}
+                </p>
+            )}
         </div>
     );
 };

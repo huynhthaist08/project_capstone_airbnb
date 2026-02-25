@@ -91,6 +91,27 @@ const RoomDetailPage = () => {
         startIndex + COMMENTS_PER_PAGE,
     );
 
+    // Các trang hiển thị trong pagination (tối đa 5 trang một lúc)
+    const MAX_VISIBLE_PAGES = 5;
+    const visiblePages = (() => {
+        if (totalPages <= MAX_VISIBLE_PAGES) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        }
+        const half = Math.floor(MAX_VISIBLE_PAGES / 2);
+        let start = currentPage - half;
+        let end = currentPage + half;
+
+        if (start < 1) {
+            start = 1;
+            end = MAX_VISIBLE_PAGES;
+        } else if (end > totalPages) {
+            end = totalPages;
+            start = totalPages - MAX_VISIBLE_PAGES + 1;
+        }
+
+        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    })();
+
     const handleBook = (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) {
@@ -240,11 +261,20 @@ const RoomDetailPage = () => {
                                 ))}
                             </ul>
                             {totalPages > 1 && (
-                                <div className="flex justify-center gap-2 pt-4">
-                                    {Array.from(
-                                        { length: totalPages },
-                                        (_, i) => i + 1,
-                                    ).map((page) => (
+                                <div className="flex justify-center gap-2 pt-4 flex-wrap items-center text-sm">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        disabled={currentPage === 1}
+                                        onClick={() =>
+                                            setCurrentPage((prev) =>
+                                                Math.max(1, prev - 1),
+                                            )
+                                        }
+                                    >
+                                        {"< Trước"}
+                                    </Button>
+                                    {visiblePages.map((page) => (
                                         <Button
                                             key={page}
                                             size="sm"
@@ -253,11 +283,34 @@ const RoomDetailPage = () => {
                                                     ? "default"
                                                     : "outline"
                                             }
-                                            onClick={() => setCurrentPage(page)}
+                                            onClick={() =>
+                                                setCurrentPage(page)
+                                            }
                                         >
                                             {page}
                                         </Button>
                                     ))}
+                                    {visiblePages[visiblePages.length - 1] <
+                                        totalPages && (
+                                        <span className="px-1 text-muted-foreground select-none">
+                                            ...
+                                        </span>
+                                    )}
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        disabled={currentPage === totalPages}
+                                        onClick={() =>
+                                            setCurrentPage((prev) =>
+                                                Math.min(
+                                                    totalPages,
+                                                    prev + 1,
+                                                ),
+                                            )
+                                        }
+                                    >
+                                        {"Sau >"}
+                                    </Button>
                                 </div>
                             )}
                         </CardContent>

@@ -21,6 +21,7 @@ import {
 import { Label } from "@/core/ui/label";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import type { User } from "@/types/user.type";
 import apiInstance from "@/shared/services/api";
 import { getPaginatedData } from "@/utils/apiResponse";
@@ -36,6 +37,7 @@ const AdminUsersPage = () => {
         password: "",
         phone: "",
     });
+    const [showPassword, setShowPassword] = useState(false);
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
@@ -238,17 +240,33 @@ const AdminUsersPage = () => {
 
                         <div className="space-y-2">
                             <Label>Mật khẩu</Label>
-                            <Input
-                                type="password"
-                                placeholder="Mật khẩu"
-                                value={form.password}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        password: e.target.value,
-                                    })
-                                }
-                            />
+                            <div className="relative">
+                                <Input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Mật khẩu"
+                                    className="pr-10"
+                                    value={form.password}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            password: e.target.value,
+                                        })
+                                    }
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                                    onClick={() =>
+                                        setShowPassword((prev) => !prev)
+                                    }
+                                >
+                                    {showPassword ? (
+                                        <FaEyeSlash className="w-4 h-4" />
+                                    ) : (
+                                        <FaEye className="w-4 h-4" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
 
                         <DialogFooter>

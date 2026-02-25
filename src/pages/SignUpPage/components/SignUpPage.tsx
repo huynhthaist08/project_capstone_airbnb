@@ -13,7 +13,7 @@ import {
     CardTitle,
 } from "@/core/ui/card";
 import { PUBLIC_PATH } from "@/routes/path";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { FaArrowRightLong, FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutaRegister } from "../hooks";
@@ -24,6 +24,8 @@ import { useState } from "react";
 const SignUpPage = () => {
     const { mutate, isPending } = useMutaRegister();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
         register,
@@ -102,12 +104,28 @@ const SignUpPage = () => {
                             {/* Password */}
                             <div className="space-y-2">
                                 <Label htmlFor="password">Mật khẩu</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    placeholder="Mật khẩu"
-                                    {...register("password")}
-                                />
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Mật khẩu"
+                                        className="pr-10"
+                                        {...register("password")}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                                        onClick={() =>
+                                            setShowPassword((prev) => !prev)
+                                        }
+                                    >
+                                        {showPassword ? (
+                                            <FaEyeSlash className="w-4 h-4" />
+                                        ) : (
+                                            <FaEye className="w-4 h-4" />
+                                        )}
+                                    </button>
+                                </div>
                                 {errors.password && (
                                     <span className="text-red-500 text-sm">
                                         {errors.password.message}
@@ -120,12 +138,34 @@ const SignUpPage = () => {
                                 <Label htmlFor="confirmPassword">
                                     Nhập lại mật khẩu
                                 </Label>
-                                <Input
-                                    id="confirmPassword"
-                                    type="password"
-                                    placeholder="Nhập lại mật khẩu"
-                                    {...register("confirmPassword")}
-                                />
+                                <div className="relative">
+                                    <Input
+                                        id="confirmPassword"
+                                        type={
+                                            showConfirmPassword
+                                                ? "text"
+                                                : "password"
+                                        }
+                                        placeholder="Nhập lại mật khẩu"
+                                        className="pr-10"
+                                        {...register("confirmPassword")}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                                        onClick={() =>
+                                            setShowConfirmPassword(
+                                                (prev) => !prev,
+                                            )
+                                        }
+                                    >
+                                        {showConfirmPassword ? (
+                                            <FaEyeSlash className="w-4 h-4" />
+                                        ) : (
+                                            <FaEye className="w-4 h-4" />
+                                        )}
+                                    </button>
+                                </div>
                                 {errors.confirmPassword && (
                                     <span className="text-red-500 text-sm">
                                         {errors.confirmPassword.message}
