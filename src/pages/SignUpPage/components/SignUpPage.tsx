@@ -195,6 +195,7 @@ const SignUpPage = () => {
                                 <Input
                                     id="birthday"
                                     type="date"
+                                    max={new Date().toISOString().split('T')[0]}
                                     {...register("birthday")}
                                 />
                                 {errors.birthday && (
