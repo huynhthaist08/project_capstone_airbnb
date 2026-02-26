@@ -8,8 +8,9 @@ export interface SignUpPayload {
 }
 
 export interface SignInPayload {
-    taiKhoan: string;
-    matKhau: string;
+    // API /auth/signin hiện sử dụng email + password cho đăng nhập.
+    email: string;
+    password: string;
 }
 
 // AuthResponse: cấu trúc dữ liệu cho response đăng nhập, gồm accessToken và thông tin user.

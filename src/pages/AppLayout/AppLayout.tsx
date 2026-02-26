@@ -1,9 +1,11 @@
 import Footer from "./Footer";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 // AppLayout: Layout khung chính của ứng dụng, cố định Header/Footer
 // và render nội dung trang con thông qua `<Outlet />` của React Router.
+// Đồng thời chứa các thành phần global như nút Scroll To Top.
 const AppLayout = () => {
     return (
         <div className="min-h-dvh flex flex-col">
@@ -16,6 +18,7 @@ const AppLayout = () => {
                 </main>
                 <Footer />
             </div>
+            <ScrollToTopButton />
         </div>
     );
 };

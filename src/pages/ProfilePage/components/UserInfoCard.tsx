@@ -19,7 +19,7 @@ export const UserInfoCard = ({ profile, onUpdate }: Props) => {
 
   if (!profile) {
     return (
-      <div className="bg-white rounded-2xl shadow p-6">
+      <div className="bg-white text-black rounded-2xl shadow p-6">
         Loading user information...
       </div>
     );
@@ -46,7 +46,8 @@ export const UserInfoCard = ({ profile, onUpdate }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+    // Luôn dùng nền sáng + chữ tối để không bị mất chữ khi bật dark mode.
+    <div className="bg-white text-black rounded-2xl shadow-lg p-6 mb-6">
       {/* Avatar Section */}
       <div className="text-center mb-6">
         <div className="relative w-32 h-32 mx-auto rounded-full bg-gray-200 overflow-hidden border-4 border-white shadow-lg">

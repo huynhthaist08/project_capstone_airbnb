@@ -37,7 +37,7 @@ export const BookedRoomsList = ({ bookings }: Props) => {
 
   if (!bookings || bookings.length === 0) {
     return (
-      <div className="bg-white rounded-2xl shadow p-8 text-center">
+      <div className="bg-white text-black rounded-2xl shadow p-8 text-center">
         <h2 className="text-2xl font-bold mb-4">Phòng đã thuê</h2>
         <p className="text-gray-500">Bạn chưa đặt phòng nào</p>
       </div>
@@ -46,7 +46,7 @@ export const BookedRoomsList = ({ bookings }: Props) => {
 
   if (roomQueries.isLoading) {
     return (
-      <div className="bg-white rounded-2xl shadow p-8">
+      <div className="bg-white text-black rounded-2xl shadow p-8">
         <h2 className="text-2xl font-bold mb-6">Phòng đã thuê</h2>
         <p className="text-gray-500">Đang tải danh sách phòng...</p>
       </div>
@@ -63,7 +63,8 @@ export const BookedRoomsList = ({ bookings }: Props) => {
         {bookedRooms.map(({ booking, room }) => (
           <div
             key={booking.id}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+            // Card phòng đã thuê: khóa nền trắng + chữ tối để tránh mất chữ trong dark mode.
+            className="bg-white text-black rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
           >
             {/* Room Image */}
             <div className="relative h-64 overflow-hidden">
@@ -124,7 +125,7 @@ export const BookedRoomsList = ({ bookings }: Props) => {
                   </p>
                   <p className="text-lg font-bold text-gray-900">
                     ${room.giaTien}
-                    <span className="text-sm font-normal text-gray-600"> / tháng</span>
+                    <span className="text-sm font-normal text-gray-600"> / đêm</span>
                   </p>
                 </div>
               </div>
@@ -133,34 +134,7 @@ export const BookedRoomsList = ({ bookings }: Props) => {
         ))}
       </div>
 
-      {/* Info Section */}
-      <div className="mt-8 bg-gray-50 rounded-xl p-6">
-        <div className="flex items-start gap-3">
-          <div className="shrink-0 mt-1">
-            <div className="w-12 h-6 rounded bg-green-100 text-green-700 font-semibold flex items-center justify-center text-xs">
-              GET
-            </div>
-          </div>
-          <div className="flex-1">
-            <p className="font-mono text-xs text-gray-700 bg-white p-2 rounded mb-2">
-              /api/dat-phong/lay-theo-nguoi-dung/{`{MaNguoiDung}`}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              Lấy thông tin các phòng đã đặt của user đang nhập
-            </p>
-            <p className="text-xs text-gray-500">
-              URL: /api/dat-phong/lay-theo-nguoi-dung/{`{MaNguoiDung}`}
-            </p>
-            <p className="text-xs text-gray-500">
-              Swagger table: DatPhong
-            </p>
-          </div>
-        </div>
-
-        <p className="text-xs text-gray-500 italic mt-4">
-          Navlink qua trang cá nhân trong này (Trong nút)
-        </p>
-      </div>
+      
     </div>
   );
 };
