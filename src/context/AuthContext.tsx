@@ -48,13 +48,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         // Try to read from either Redux key (access_token) or AuthContext key (auth_token)
-<<<<<<< HEAD
-        const token = localStorage.getItem(ACCESS_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
-=======
         const token =
             localStorage.getItem(ACCESS_TOKEN_KEY) ||
             localStorage.getItem(AUTH_TOKEN_KEY);
->>>>>>> a9fb3db33ac3343201e681f4ae6b644f44b961f9
         const userStr = localStorage.getItem(AUTH_USER_KEY);
         if (token && userStr) {
             try {
