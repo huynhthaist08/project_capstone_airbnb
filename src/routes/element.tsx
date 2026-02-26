@@ -18,7 +18,7 @@ import ExperiencePage from "@/pages/ExperiencePage/ExperiencePage";
 import ServicePage from "@/pages/ServicePage/ServicePage";
 import RoomsByLocationPage from "@/pages/RoomsByLocationPage/RoomsByLocationPage";
 import RoomDetailPage from "@/pages/RoomDetailPage/RoomDetailPage";
-
+import ProfilePage from "@/pages/ProfilePage/components/ProfilePage";
 const element = createBrowserRouter([
     {
         path: "/",
@@ -49,6 +49,11 @@ const element = createBrowserRouter([
             {
                 path: PUBLIC_PATH.SERVICE,
                 element: <ServicePage />,
+            },
+
+            {
+                path: `${PRIVATE_PATH.PROFILE}/:id`,
+                element: <ProfilePage />,
             },
 
             {
