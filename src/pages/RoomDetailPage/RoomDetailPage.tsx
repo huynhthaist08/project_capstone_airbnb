@@ -6,13 +6,14 @@ import DAT_PHONG from "@/api/dat-phong";
 import BINH_LUAN from "@/api/binh-luan";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/core/ui/button";
 import { Input } from "@/core/ui/input";
 import { Label } from "@/core/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/core/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { getAny, getContent, getContentArray } from "@/utils/apiResponse";
+import type { Booking } from "@/types/booking.type";
 
 const RoomDetailPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -40,6 +41,12 @@ const RoomDetailPage = () => {
         enabled: !!id && !Number.isNaN(roomId),
     });
 
+    // Lấy danh sách booking của tất cả phòng để check conflict
+    const { data: allBookingsRes } = useQuery({
+        queryKey: ["dat-phong-all"],
+        queryFn: () => DAT_PHONG.getAll(),
+    });
+
     const createBooking = useMutation({
         mutationFn: (payload: {
             maPhong: number;
@@ -47,12 +54,18 @@ const RoomDetailPage = () => {
             ngayDi: string;
             soLuongKhach: number;
             maNguoiDung: number;
-        }) => DAT_PHONG.create(payload),
-        onSuccess: () => {
+        }) => {
+            console.log("📡 Calling DAT_PHONG.create with:", payload);
+            return DAT_PHONG.create(payload);
+        },
+        onSuccess: (data) => {
+            console.log("✅ Booking created successfully:", data);
             setBookingError("");
             queryClient.invalidateQueries({ queryKey: ["dat-phong"] });
+            alert("Đặt phòng thành công!");
         },
         onError: (err: unknown) => {
+            console.error("❌ Booking error:", err);
             const msg =
                 (err as { response?: { data?: { message?: string } } })
                     ?.response?.data?.message ?? "Đặt phòng thất bại.";
@@ -80,6 +93,49 @@ const RoomDetailPage = () => {
         noiDung?: string;
         ngayBinhLuan?: string;
     }>(commentsRes);
+
+    // Lấy danh sách booking của phòng này
+    const allBookings = getContentArray<Booking>(allBookingsRes);
+    const roomBookings = allBookings.filter((b: Booking) => b.maPhong === roomId);
+
+    // Hàm kiểm tra xem ngày có bị trùng với booking nào không
+    const checkDateConflict = (checkIn: string, checkOut: string): boolean => {
+        const checkInDate = new Date(checkIn);
+        const checkOutDate = new Date(checkOut);
+
+        for (const booking of roomBookings) {
+            const bookedCheckIn = new Date(booking.ngayDen);
+            const bookedCheckOut = new Date(booking.ngayDi);
+
+            // Kiểm tra overlap: 
+            // Trùng nếu: (checkIn < bookedCheckOut) && (checkOut > bookedCheckIn)
+            if (checkInDate < bookedCheckOut && checkOutDate > bookedCheckIn) {
+                return true; // Có conflict
+            }
+        }
+        return false; // Không conflict
+    };
+
+    // Kiểm tra conflict khi thay đổi ngày
+    useEffect(() => {
+        if (!ngayDen || !ngayDi) {
+            setBookingError("");
+            return;
+        }
+
+        // Kiểm tra ngày đi phải sau ngày đến
+        if (new Date(ngayDi) <= new Date(ngayDen)) {
+            setBookingError("Ngày trả phòng phải sau ngày nhận phòng.");
+            return;
+        }
+
+        // Kiểm tra xem có trùng lịch với booking nào không
+        if (checkDateConflict(ngayDen, ngayDi)) {
+            setBookingError("Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.");
+        } else {
+            setBookingError("");
+        }
+    }, [ngayDen, ngayDi, roomBookings]);
 
     // Tổng số page
     const totalPages = Math.ceil(commentList.length / COMMENTS_PER_PAGE);
@@ -114,15 +170,41 @@ const RoomDetailPage = () => {
 
     const handleBook = (e: React.FormEvent) => {
         e.preventDefault();
+        console.log("🔍 handleBook called", { user, ngayDen, ngayDi, soLuongKhach });
+        
         if (!user) {
             setBookingError("Vui lòng đăng nhập để đặt phòng.");
+            console.log("❌ User not logged in");
             return;
         }
         if (!ngayDen || !ngayDi) {
             setBookingError("Vui lòng chọn ngày đến và ngày đi.");
+            console.log("❌ Missing dates");
             return;
         }
+
+        // Kiểm tra ngày đi phải sau ngày đến
+        if (new Date(ngayDi) <= new Date(ngayDen)) {
+            setBookingError("Ngày trả phòng phải sau ngày nhận phòng.");
+            console.log("❌ Invalid date range");
+            return;
+        }
+
+        // Kiểm tra xem có trùng lịch với booking nào không
+        if (checkDateConflict(ngayDen, ngayDi)) {
+            setBookingError("Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.");
+            console.log("❌ Date conflict with existing booking");
+            return;
+        }
+
         setBookingError("");
+        console.log("✅ Creating booking...", {
+            maPhong: roomId,
+            ngayDen,
+            ngayDi,
+            soLuongKhach,
+            maNguoiDung: user.id,
+        });
         createBooking.mutate({
             maPhong: roomId,
             ngayDen,
@@ -354,16 +436,48 @@ const RoomDetailPage = () => {
                                 </div>
                                 <div className="space-y-1">
                                     <Label>Khách</Label>
-                                    <Input
-                                        type="number"
-                                        min={1}
-                                        value={soLuongKhach}
-                                        onChange={(e) =>
-                                            setSoLuongKhach(
-                                                Number(e.target.value) || 1,
-                                            )
-                                        }
-                                    />
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            disabled={soLuongKhach === 1}
+                                            onClick={() =>
+                                                setSoLuongKhach(
+                                                    Math.max(1, soLuongKhach - 1),
+                                                )
+                                            }
+                                            className="w-10 h-10 p-0"
+                                        >
+                                            −
+                                        </Button>
+                                        <Input
+                                            type="number"
+                                            min={1}
+                                            value={soLuongKhach}
+                                            readOnly
+                                            className="text-center flex-1"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            disabled={soLuongKhach >= khach}
+                                            onClick={() =>
+                                                setSoLuongKhach(
+                                                    Math.min(khach, soLuongKhach + 1),
+                                                )
+                                            }
+                                            className="w-10 h-10 p-0"
+                                        >
+                                            +
+                                        </Button>
+                                    </div>
+                                    {soLuongKhach >= khach && (
+                                        <p className="text-sm text-destructive">
+                                            Số lượng khách tối đa của phòng là {khach} khách, không thể đặt nhiều hơn.
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="border rounded-md p-3 text-sm space-y-2 bg-muted/40">
                                     <p className="flex justify-between">
@@ -415,7 +529,17 @@ const RoomDetailPage = () => {
                                 <Button
                                     type="submit"
                                     className="w-full"
-                                    disabled={createBooking.isPending || !user}
+                                    disabled={createBooking.isPending || !user || !!bookingError}
+                                    onClick={() => {
+                                        console.log("🔘 Button clicked", {
+                                            user: user ? `${user.name} (ID: ${user.id})` : "NOT LOGGED IN",
+                                            ngayDen,
+                                            ngayDi,
+                                            soLuongKhach,
+                                            isPending: createBooking.isPending,
+                                            disabled: createBooking.isPending || !user,
+                                        });
+                                    }}
                                 >
                                     {createBooking.isPending
                                         ? "Đang xử lý..."

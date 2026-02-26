@@ -11,6 +11,10 @@ const apiInstance = axios.create();
 
 // Mọi request đều gắn baseURL, header TokenCybersoft và Authorization (Bearer token).
 apiInstance.interceptors.request.use((config) => {
+    console.log(`📤 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
+        data: config.data,
+        headers: config.headers,
+    });
     return {
         ...config,
         baseURL: APP_CONFIG.BASE_URL,
@@ -25,8 +29,19 @@ apiInstance.interceptors.request.use((config) => {
 });
 
 apiInstance.interceptors.response.use(
-    (res) => res,
+    (res) => {
+        console.log(`✅ API Response: ${res.status}`, {
+            url: res.config.url,
+            data: res.data,
+        });
+        return res;
+    },
     (error) => {
+        console.error(`❌ API Error: ${error.response?.status}`, {
+            url: error.config?.url,
+            message: error.message,
+            data: error.response?.data,
+        });
         const status = error.response?.status;
         if (status === 401 || status === 403) {
             // Token hết hạn hoặc không hợp lệ: xóa token + user, chuyển về đăng nhập
