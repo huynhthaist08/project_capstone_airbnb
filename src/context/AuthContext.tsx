@@ -13,7 +13,10 @@ import React, {
 import AUTH_API from "@/api/auth";
 import { APP_CONFIG } from "@/config";
 import type { User } from "@/types/user.type";
-import { AUTH_TOKEN_KEY, AUTH_USER_KEY } from "@/constants";
+import { STORAGE_KEYS, AUTH_USER_KEY } from "@/constants";
+
+const AUTH_TOKEN_KEY = "auth_token"; // AuthContext key
+const ACCESS_TOKEN_KEY = STORAGE_KEYS.ACCESS_TOKEN; // Redux key
 
 interface AuthState {
     user: User | null;
@@ -44,13 +47,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     useEffect(() => {
-        const token = localStorage.getItem(AUTH_TOKEN_KEY);
+        // Try to read from either Redux key (access_token) or AuthContext key (auth_token)
+        const token =
+            localStorage.getItem(ACCESS_TOKEN_KEY) ||
+            localStorage.getItem(AUTH_TOKEN_KEY);
         const userStr = localStorage.getItem(AUTH_USER_KEY);
         if (token && userStr) {
             try {
                 const user = JSON.parse(userStr) as User;
                 setState({ user, token, isReady: true });
             } catch {
+                localStorage.removeItem(ACCESS_TOKEN_KEY);
                 localStorage.removeItem(AUTH_TOKEN_KEY);
                 localStorage.removeItem(AUTH_USER_KEY);
                 setState({ user: null, token: null, isReady: true });
@@ -76,6 +83,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 role: "ADMIN",
             };
             const fakeToken = "ADMIN_DEMO_TOKEN";
+            // Save to both keys for compatibility
+            localStorage.setItem(ACCESS_TOKEN_KEY, fakeToken);
             localStorage.setItem(AUTH_TOKEN_KEY, fakeToken);
             localStorage.setItem(AUTH_USER_KEY, JSON.stringify(adminUser));
             setState({ user: adminUser, token: fakeToken, isReady: true });
@@ -102,6 +111,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             role: (userRaw as { role?: string }).role,
         };
         if (token) {
+            // Save to both keys for compatibility
+            localStorage.setItem(ACCESS_TOKEN_KEY, token);
             localStorage.setItem(AUTH_TOKEN_KEY, token);
             localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
             setState({ user, token, isReady: true });
@@ -137,6 +148,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 role: (userRaw as { role?: string }).role,
             };
             if (token) {
+                // Save to both keys for compatibility
+                localStorage.setItem(ACCESS_TOKEN_KEY, token);
                 localStorage.setItem(AUTH_TOKEN_KEY, token);
                 localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
                 setState({ user, token, isReady: true });
@@ -148,6 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     const logout = useCallback(() => {
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
         localStorage.removeItem(AUTH_TOKEN_KEY);
         localStorage.removeItem(AUTH_USER_KEY);
         setState({ user: null, token: null, isReady: true });
