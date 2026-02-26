@@ -12,9 +12,9 @@ const Footer = () => {
 
     return (
         <>
-            <footer className="bg-(--color-bg-footer) shadow-[0_-8px_24px_rgba(0,0,0,0.08)]">
-                <div className="container mx-auto px-6 py-10">
-                    <div className="mt-5 grid grid-cols-4 gap-x-24 border-b pb-5">
+            <footer className="bg-(--color-bg-footer) text-black shadow-[0_-8px_24px_rgba(0,0,0,0.08)]">
+                <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10">
+                    <div className="mt-5 grid grid-cols-1 gap-8 border-b pb-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-24">
                         <div className="space-y-3">
                             <h4 className="mb-4 font-semibold uppercase">
                                 Giới thiệu
@@ -78,9 +78,9 @@ const Footer = () => {
                     </div>
 
                     {/*Bottom grid */}
-                    <div className="flex items-center justify-between mt-4">
-                        <div className="space-y-6">
-                            <div className="flex gap-5">
+                    <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="space-y-4">
+                            <div className="flex flex-wrap items-center gap-3 text-sm">
                                 <p>© 2026 Airbnb, Inc. All reserved</p>
                                 <p className="hover:text-[#6c6c6c] cursor-pointer">
                                     · Quyền riêng tư
@@ -94,7 +94,7 @@ const Footer = () => {
                             </div>
                         </div>
                         <div>
-                            <div className="flex gap-3">
+                            <div className="flex flex-wrap justify-start gap-3">
                                 <div className="h-10 w-36 bg-black text-white flex items-center gap-2 px-3 rounded cursor-pointer">
                                     <img
                                         src={googleplay}

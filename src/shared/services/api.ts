@@ -1,29 +1,34 @@
 /**
  * shared/services/api.ts
- * Instance Axios dùng chung cho mọi API: tự gắn baseURL, TokenCybersoft và Bearer token từ localStorage.
- * Interceptor response: khi 401/403 thì xóa token + user và redirect về trang đăng nhập.
+ * Instance Axios dùng chung cho mọi API: tự gắn baseURL, tokenCybersoft và Bearer token từ localStorage.
+ * Interceptor response chỉ log lỗi (không tự ý clear localStorage hay redirect).
  */
 import { APP_CONFIG } from "@/config";
-import { STORAGE_KEYS, AUTH_USER_KEY } from "@/constants/storageKeys";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import axios from "axios";
 
 const apiInstance = axios.create();
 
-// Mọi request đều gắn baseURL, header TokenCybersoft và Authorization (Bearer token).
+// Mọi request đều gắn baseURL, header tokenCybersoft và Authorization (Bearer <access_token>).
 apiInstance.interceptors.request.use((config) => {
-    console.log(`📤 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
-        data: config.data,
-        headers: config.headers,
-    });
+    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+    console.log(
+        `📤 API Request: ${config.method?.toUpperCase()} ${APP_CONFIG.BASE_URL}${config.url}`,
+        {
+            data: config.data,
+            headers: config.headers,
+        },
+    );
     return {
         ...config,
         baseURL: APP_CONFIG.BASE_URL,
         headers: {
             ...config.headers,
-            TokenCybersoft: APP_CONFIG.TOKEN_CYBERSOFT,
-            Authorization: `Bearer ${
-                localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) || ""
-            }`,
+            // Đặt đúng tên header theo swagger: tokenCybersoft
+            tokenCybersoft: APP_CONFIG.TOKEN_CYBERSOFT,
+            // Chỉ gắn Authorization khi đã có token hợp lệ
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
     } as unknown as typeof config;
 });
@@ -42,15 +47,7 @@ apiInstance.interceptors.response.use(
             message: error.message,
             data: error.response?.data,
         });
-        const status = error.response?.status;
-        if (status === 401 || status === 403) {
-            // Token hết hạn hoặc không hợp lệ: xóa token + user, chuyển về đăng nhập
-            localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-            localStorage.removeItem(AUTH_USER_KEY);
-            if (window.location.pathname !== "/dang-nhap") {
-                window.location.href = "/dang-nhap";
-            }
-        }
+        // Không tự động clear localStorage hoặc redirect; để tầng UI tự xử lý.
         return Promise.reject(error);
     },
 );

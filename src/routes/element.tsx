@@ -19,6 +19,7 @@ import ServicePage from "@/pages/ServicePage/ServicePage";
 import RoomsByLocationPage from "@/pages/RoomsByLocationPage/RoomsByLocationPage";
 import RoomDetailPage from "@/pages/RoomDetailPage/RoomDetailPage";
 import ProfilePage from "@/pages/ProfilePage/components/ProfilePage";
+import AdminRoute from "./AdminRoute";
 const element = createBrowserRouter([
     {
         path: "/",
@@ -70,7 +71,12 @@ const element = createBrowserRouter([
 
     {
         path: PRIVATE_PATH.ADMIN,
-        element: <AdminLayout />,
+        // Bọc toàn bộ layout admin trong AdminRoute để kiểm soát quyền truy cập theo role.
+        element: (
+            <AdminRoute>
+                <AdminLayout />
+            </AdminRoute>
+        ),
 
         children: [
             {

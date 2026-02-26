@@ -8,7 +8,8 @@ interface Props {
 export const VerificationCards = ({ profile }: Props) => {
   console.log('Profile:', profile); // Use profile to avoid warning
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
+    // Card xác minh luôn nền trắng + chữ tối để đảm bảo độ tương phản trên cả light/dark theme.
+    <div className="bg-white text-black rounded-2xl shadow-lg p-6">
       {/* Title */}
       <h3 className="text-xl font-bold mb-4 pb-4 border-b">
         Xác minh danh tính

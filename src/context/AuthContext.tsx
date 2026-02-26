@@ -1,7 +1,7 @@
 /**
  * context/AuthContext.tsx
  * Context cung cấp trạng thái đăng nhập (user, token) và hàm login/signup/logout/setUser.
- * Hỗ trợ đăng nhập local với tài khoản admin demo (không gọi API). Các component dùng useAuth() để lấy/sử dụng auth.
+ * Chỉ sử dụng token thật trả về từ backend và lưu dưới một key duy nhất "access_token".
  */
 import React, {
     createContext,
@@ -11,12 +11,11 @@ import React, {
     useState,
 } from "react";
 import AUTH_API from "@/api/auth";
-import { APP_CONFIG } from "@/config";
 import type { User } from "@/types/user.type";
 import { STORAGE_KEYS, AUTH_USER_KEY } from "@/constants";
 
-const AUTH_TOKEN_KEY = "auth_token"; // AuthContext key
-const ACCESS_TOKEN_KEY = STORAGE_KEYS.ACCESS_TOKEN; // Redux key
+// Sử dụng DUY NHẤT key "access_token" để lưu token trong localStorage
+const ACCESS_TOKEN_KEY = STORAGE_KEYS.ACCESS_TOKEN;
 
 interface AuthState {
     user: User | null;
@@ -25,7 +24,11 @@ interface AuthState {
 }
 
 interface AuthContextValue extends AuthState {
-    login: (taiKhoan: string, matKhau: string) => Promise<void>;
+    // login: gọi API backend /auth/signin, lưu token + user và trả về để các tầng khác (Redux, UI) có thể dùng lại.
+    login: (
+        email: string,
+        password: string,
+    ) => Promise<{ token: string; user: User }>;
     signup: (payload: {
         taiKhoan: string;
         matKhau: string;
@@ -47,10 +50,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     useEffect(() => {
-        // Try to read from either Redux key (access_token) or AuthContext key (auth_token)
-        const token =
-            localStorage.getItem(ACCESS_TOKEN_KEY) ||
-            localStorage.getItem(AUTH_TOKEN_KEY);
+        // Đọc lại token + user từ localStorage khi reload trang
+        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
         const userStr = localStorage.getItem(AUTH_USER_KEY);
         if (token && userStr) {
             try {
@@ -58,7 +59,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setState({ user, token, isReady: true });
             } catch {
                 localStorage.removeItem(ACCESS_TOKEN_KEY);
-                localStorage.removeItem(AUTH_TOKEN_KEY);
                 localStorage.removeItem(AUTH_USER_KEY);
                 setState({ user: null, token: null, isReady: true });
             }
@@ -67,59 +67,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
-    const login = useCallback(async (taiKhoan: string, matKhau: string) => {
-        // Nếu trùng với tài khoản admin mặc định thì cho đăng nhập local, không gọi API
-        if (
-            taiKhoan === APP_CONFIG.DEFAULT_ADMIN_ACCOUNT.taiKhoan &&
-            matKhau === APP_CONFIG.DEFAULT_ADMIN_ACCOUNT.matKhau
-        ) {
-            const adminUser: User = {
-                id: -1,
-                name: APP_CONFIG.DEFAULT_ADMIN_ACCOUNT.name,
-                email: APP_CONFIG.DEFAULT_ADMIN_ACCOUNT.email,
-                phone: undefined,
-                avatar: undefined,
-                gender: true,
-                role: "ADMIN",
+    const login = useCallback(
+        async (email: string, password: string) => {
+            // Luôn gọi API backend thật /auth/signin để lấy token JWT hợp lệ
+            const res = await AUTH_API.signin({ email, password });
+            const data = res.data?.content ?? res.data;
+            const token =
+                (data as { accessToken?: string; token?: string })
+                    .accessToken ??
+                (data as { accessToken?: string; token?: string }).token;
+            const userRaw = (data as { user?: User }).user ?? data;
+            const user: User = {
+                id: (userRaw as { id: number }).id,
+                name:
+                    (userRaw as { name?: string }).name ??
+                    (userRaw as { hoTen?: string }).hoTen ??
+                    "",
+                email: (userRaw as { email: string }).email ?? "",
+                phone:
+                    (userRaw as { soDt?: string }).soDt ??
+                    (userRaw as { phone?: string }).phone,
+                avatar: (userRaw as { avatar?: string }).avatar,
+                role: (userRaw as { role?: string }).role,
             };
-            const fakeToken = "ADMIN_DEMO_TOKEN";
-            // Save to both keys for compatibility
-            localStorage.setItem(ACCESS_TOKEN_KEY, fakeToken);
-            localStorage.setItem(AUTH_TOKEN_KEY, fakeToken);
-            localStorage.setItem(AUTH_USER_KEY, JSON.stringify(adminUser));
-            setState({ user: adminUser, token: fakeToken, isReady: true });
-            return;
-        }
+            if (!token) {
+                throw new Error("Đăng nhập thất bại");
+            }
 
-        const res = await AUTH_API.signin({ taiKhoan, matKhau });
-        const data = res.data?.content ?? res.data;
-        const token =
-            (data as { accessToken?: string; token?: string }).accessToken ??
-            (data as { accessToken?: string; token?: string }).token;
-        const userRaw = (data as { user?: User }).user ?? data;
-        const user: User = {
-            id: (userRaw as { id: number }).id,
-            name:
-                (userRaw as { name?: string }).name ??
-                (userRaw as { hoTen?: string }).hoTen ??
-                "",
-            email: (userRaw as { email: string }).email ?? "",
-            phone:
-                (userRaw as { soDt?: string }).soDt ??
-                (userRaw as { phone?: string }).phone,
-            avatar: (userRaw as { avatar?: string }).avatar,
-            role: (userRaw as { role?: string }).role,
-        };
-        if (token) {
-            // Save to both keys for compatibility
+            // Lưu token và user vào localStorage với key chuẩn hóa
             localStorage.setItem(ACCESS_TOKEN_KEY, token);
-            localStorage.setItem(AUTH_TOKEN_KEY, token);
             localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
             setState({ user, token, isReady: true });
-        } else {
-            throw new Error("Đăng nhập thất bại");
-        }
-    }, []);
+
+            // Trả token + user để các hook khác (Redux, UI) sử dụng lại mà không cần gọi API lần 2.
+            return { token, user };
+        },
+        [],
+    );
 
     const signup = useCallback(
         async (payload: {
@@ -148,9 +132,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 role: (userRaw as { role?: string }).role,
             };
             if (token) {
-                // Save to both keys for compatibility
+                // Lưu token và user vào localStorage với key chuẩn hóa
                 localStorage.setItem(ACCESS_TOKEN_KEY, token);
-                localStorage.setItem(AUTH_TOKEN_KEY, token);
                 localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
                 setState({ user, token, isReady: true });
             } else {
@@ -161,8 +144,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     const logout = useCallback(() => {
+        // Xóa toàn bộ thông tin đăng nhập (token + user) khỏi localStorage
         localStorage.removeItem(ACCESS_TOKEN_KEY);
-        localStorage.removeItem(AUTH_TOKEN_KEY);
         localStorage.removeItem(AUTH_USER_KEY);
         setState({ user: null, token: null, isReady: true });
     }, []);

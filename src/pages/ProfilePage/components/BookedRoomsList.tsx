@@ -37,7 +37,7 @@ export const BookedRoomsList = ({ bookings }: Props) => {
 
   if (!bookings || bookings.length === 0) {
     return (
-      <div className="bg-white rounded-2xl shadow p-8 text-center">
+      <div className="bg-white text-black rounded-2xl shadow p-8 text-center">
         <h2 className="text-2xl font-bold mb-4">Phòng đã thuê</h2>
         <p className="text-gray-500">Bạn chưa đặt phòng nào</p>
       </div>
@@ -46,7 +46,7 @@ export const BookedRoomsList = ({ bookings }: Props) => {
 
   if (roomQueries.isLoading) {
     return (
-      <div className="bg-white rounded-2xl shadow p-8">
+      <div className="bg-white text-black rounded-2xl shadow p-8">
         <h2 className="text-2xl font-bold mb-6">Phòng đã thuê</h2>
         <p className="text-gray-500">Đang tải danh sách phòng...</p>
       </div>
@@ -63,7 +63,8 @@ export const BookedRoomsList = ({ bookings }: Props) => {
         {bookedRooms.map(({ booking, room }) => (
           <div
             key={booking.id}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+            // Card phòng đã thuê: khóa nền trắng + chữ tối để tránh mất chữ trong dark mode.
+            className="bg-white text-black rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
           >
             {/* Room Image */}
             <div className="relative h-64 overflow-hidden">

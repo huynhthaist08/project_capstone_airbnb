@@ -95,72 +95,74 @@ const SearchBar = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto mb-6">
+        <div className="max-w-4xl mx-auto mb-6 px-4 sm:px-0">
             <form
                 onSubmit={handleSubmit}
-                className="flex flex-col sm:flex-row items-center gap-2 p-6 rounded-full border bg-background shadow-lg"
+                // Mobile-first: card bo tròn, xếp dọc; desktop: pill ngang giống header, luôn nền sáng.
+                className="flex w-full flex-col gap-3 rounded-3xl border bg-white text-black shadow-lg p-4 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:p-6"
             >
-                {/* Location */}
-                <div className="flex-1 relative">
+                <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
+                    {/* Location */}
+                    <div className="flex-1 relative">
+                        <Input
+                            placeholder="Địa điểm"
+                            value={keyword}
+                            onChange={(e) => {
+                                setKeyword(e.target.value);
+                                setSelectedId(null);
+                            }}
+                            autoComplete="off"
+                            className="border-0 shadow-none focus-visible:ring-0 h-11 sm:h-12"
+                        />
+
+                        {/* Dropdown */}
+                        {keyword && filtered.length > 0 && (
+                            <ul className="absolute left-0 right-0 top-full mt-2 bg-white border rounded-2xl shadow-xl max-h-60 overflow-auto z-50">
+                                {filtered.map((loc) => (
+                                    <li
+                                        key={loc.id}
+                                        onClick={() => handleSelect(loc)}
+                                        className="px-4 py-3 text-sm cursor-pointer hover:bg-muted transition"
+                                    >
+                                        {loc.tenViTri}, {loc.tinhThanh}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    {/* Check in */}
                     <Input
-                        placeholder="Địa điểm"
-                        value={keyword}
-                        onChange={(e) => {
-                            setKeyword(e.target.value);
-                            setSelectedId(null);
-                        }}
-                        autoComplete="off"
-                        className="border-0 shadow-none focus-visible:ring-0 h-12"
+                        type="date"
+                        value={ngayDen}
+                        onChange={(e) => setNgayDen(e.target.value)}
+                        className="border-0 shadow-none focus-visible:ring-0 h-11 sm:h-12 sm:w-40"
                     />
 
-                    {/* Dropdown */}
-                    {keyword && filtered.length > 0 && (
-                        <ul className="absolute left-0 right-0 top-full mt-2 bg-background border rounded-2xl shadow-xl max-h-60 overflow-auto z-50">
-                            {filtered.map((loc) => (
-                                <li
-                                    key={loc.id}
-                                    onClick={() => handleSelect(loc)}
-                                    className="px-4 py-3 text-sm cursor-pointer hover:bg-muted transition"
-                                >
-                                    {loc.tenViTri}, {loc.tinhThanh}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+                    {/* Check out */}
+                    <Input
+                        type="date"
+                        value={ngayDi}
+                        onChange={(e) => setNgayDi(e.target.value)}
+                        className="border-0 shadow-none focus-visible:ring-0 h-11 sm:h-12 sm:w-40"
+                    />
+
+                    {/* Guests */}
+                    <Input
+                        type="number"
+                        min={1}
+                        value={soKhach}
+                        onChange={(e) =>
+                            setSoKhach(Math.max(1, Number(e.target.value) || 1))
+                        }
+                        className="border-0 shadow-none focus-visible:ring-0 h-11 sm:h-12 sm:w-24"
+                    />
                 </div>
-
-                {/* Check in */}
-                <Input
-                    type="date"
-                    value={ngayDen}
-                    onChange={(e) => setNgayDen(e.target.value)}
-                    className="border-0 shadow-none focus-visible:ring-0 h-12 sm:w-40"
-                />
-
-                {/* Check out */}
-                <Input
-                    type="date"
-                    value={ngayDi}
-                    onChange={(e) => setNgayDi(e.target.value)}
-                    className="border-0 shadow-none focus-visible:ring-0 h-12 sm:w-40"
-                />
-
-                {/* Guests */}
-                <Input
-                    type="number"
-                    min={1}
-                    value={soKhach}
-                    onChange={(e) =>
-                        setSoKhach(Math.max(1, Number(e.target.value) || 1))
-                    }
-                    className="border-0 shadow-none focus-visible:ring-0 h-12 sm:w-24"
-                />
 
                 {/* Button */}
                 <Button
                     type="submit"
-                    size="icon"
-                    className="rounded-full bg-primary h-12 w-12 shrink-0 cursor-pointer"
+                    className="mt-1 inline-flex h-11 w-full items-center justify-center rounded-full bg-[#ff385c] text-white hover:bg-[#ff385c]/90 sm:mt-0 sm:h-12 sm:w-12 sm:shrink-0"
                 >
                     <Search className="size-5" />
                 </Button>
@@ -168,7 +170,7 @@ const SearchBar = () => {
 
             {/* Error message */}
             {error && (
-                <p className="mt-2 text-center text-xs text-destructive">
+                <p className="mt-2 text-center text-xs text-red-500">
                     {error}
                 </p>
             )}

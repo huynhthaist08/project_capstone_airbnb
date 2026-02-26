@@ -36,10 +36,15 @@ const PHONG_THUE = {
     update: (id: number, data: Partial<Room>) =>
         apiInstance.put(`/phong-thue/${id}`, data),
     delete: (id: number) => apiInstance.delete(`/phong-thue/${id}`),
-    uploadImage: (formData: FormData) =>
-        apiInstance.post("/phong-thue/upload-hinh-phong", formData, {
+    // [ADMIN] Upload hình phòng theo endpoint /phong-thue/upload-hinh-phong?maPhong={id}
+    uploadImage: (id: number, file: File) => {
+        const formData = new FormData();
+        formData.append("formFile", file);
+        return apiInstance.post(`/phong-thue/upload-hinh-phong`, formData, {
+            params: { maPhong: id },
             headers: { "Content-Type": "multipart/form-data" },
-        }),
+        });
+    },
 };
 
 export default PHONG_THUE;

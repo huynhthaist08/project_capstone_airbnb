@@ -2,6 +2,7 @@
  * AdminBookingsPage: trang admin quản lý đặt phòng — bảng danh sách đặt phòng (phân trang client), xóa đặt phòng; gọi API dat-phong.
  */
 import { Button } from "@/core/ui/button";
+import { Input } from "@/core/ui/input";
 import {
     Table,
     TableBody,
@@ -10,16 +11,33 @@ import {
     TableHeader,
     TableRow,
 } from "@/core/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/core/ui/dialog";
+import { Label } from "@/core/ui/label";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import DAT_PHONG from "@/api/dat-phong";
-import type { Booking } from "@/types/booking.type";
+import type { Booking, CreateBookingPayload } from "@/types/booking.type";
 import { getContentArray } from "@/utils/apiResponse";
 
 const AdminBookingsPage = () => {
     const queryClient = useQueryClient();
     const [pageIndex, setPageIndex] = useState(1);
     const pageSize = 10;
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
+    const [form, setForm] = useState<CreateBookingPayload>({
+        maPhong: 0,
+        ngayDen: "",
+        ngayDi: "",
+        soLuongKhach: 1,
+        maNguoiDung: 0,
+    });
 
     const { data } = useQuery({
         queryKey: ["admin-bookings"],
@@ -43,6 +61,47 @@ const AdminBookingsPage = () => {
         },
     });
 
+    const createBooking = useMutation({
+        mutationFn: () =>
+            DAT_PHONG.create({
+                maPhong: Number(form.maPhong),
+                ngayDen: form.ngayDen,
+                ngayDi: form.ngayDi,
+                soLuongKhach: Number(form.soLuongKhach),
+                maNguoiDung: Number(form.maNguoiDung),
+            }),
+        onSuccess: () => {
+            setIsDialogOpen(false);
+            setForm({
+                maPhong: 0,
+                ngayDen: "",
+                ngayDi: "",
+                soLuongKhach: 1,
+                maNguoiDung: 0,
+            });
+            queryClient.invalidateQueries({ queryKey: ["admin-bookings"] });
+        },
+    });
+
+    const updateBooking = useMutation({
+        mutationFn: (payload: {
+            id: number;
+            data: Partial<CreateBookingPayload>;
+        }) => DAT_PHONG.update(payload.id, payload.data),
+        onSuccess: () => {
+            setIsDialogOpen(false);
+            setEditingBooking(null);
+            setForm({
+                maPhong: 0,
+                ngayDen: "",
+                ngayDi: "",
+                soLuongKhach: 1,
+                maNguoiDung: 0,
+            });
+            queryClient.invalidateQueries({ queryKey: ["admin-bookings"] });
+        },
+    });
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -50,8 +109,28 @@ const AdminBookingsPage = () => {
                 <h1 className="text-2xl font-bold">Quản lý đặt phòng</h1>
             </div>
 
+            {/* Actions */}
+            <div className="flex flex-wrap gap-2">
+                <Button
+                    variant="outline"
+                    onClick={() => {
+                        setEditingBooking(null);
+                        setForm({
+                            maPhong: 0,
+                            ngayDen: "",
+                            ngayDi: "",
+                            soLuongKhach: 1,
+                            maNguoiDung: 0,
+                        });
+                        setIsDialogOpen(true);
+                    }}
+                >
+                    Thêm đặt phòng
+                </Button>
+            </div>
+
             {/* Table */}
-            <div className="rounded-md border bg-background">
+            <div className="rounded-md border bg-background overflow-x-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -74,7 +153,24 @@ const AdminBookingsPage = () => {
                                 <TableCell>{b.ngayDi}</TableCell>
                                 <TableCell>{b.soLuongKhach}</TableCell>
                                 <TableCell>{b.maNguoiDung}</TableCell>
-                                <TableCell>
+                                <TableCell className="space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setEditingBooking(b);
+                                            setForm({
+                                                maPhong: b.maPhong,
+                                                ngayDen: b.ngayDen,
+                                                ngayDi: b.ngayDi,
+                                                soLuongKhach: b.soLuongKhach,
+                                                maNguoiDung: b.maNguoiDung,
+                                            });
+                                            setIsDialogOpen(true);
+                                        }}
+                                    >
+                                        Sửa
+                                    </Button>
                                     <Button
                                         variant="destructive"
                                         size="sm"
@@ -136,6 +232,132 @@ const AdminBookingsPage = () => {
                     </div>
                 </div>
             )}
+
+            {/* Dialog thêm/sửa đặt phòng */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            {editingBooking
+                                ? "Sửa đặt phòng"
+                                : "Thêm đặt phòng"}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <form
+                        className="space-y-3 text-sm"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            if (editingBooking) {
+                                updateBooking.mutate({
+                                    id: editingBooking.id,
+                                    data: {
+                                        maPhong: Number(form.maPhong),
+                                        ngayDen: form.ngayDen,
+                                        ngayDi: form.ngayDi,
+                                        soLuongKhach:
+                                            Number(form.soLuongKhach),
+                                        maNguoiDung:
+                                            Number(form.maNguoiDung),
+                                    },
+                                });
+                            } else {
+                                createBooking.mutate();
+                            }
+                        }}
+                    >
+                        <div className="space-y-1">
+                            <Label>Mã phòng</Label>
+                            <Input
+                                type="number"
+                                value={form.maPhong}
+                                onChange={(e) =>
+                                    setForm((f) => ({
+                                        ...f,
+                                        maPhong:
+                                            Number(e.target.value) || 0,
+                                    }))
+                                }
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <Label>Ngày đến</Label>
+                            <Input
+                                type="date"
+                                value={form.ngayDen}
+                                onChange={(e) =>
+                                    setForm((f) => ({
+                                        ...f,
+                                        ngayDen: e.target.value,
+                                    }))
+                                }
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <Label>Ngày đi</Label>
+                            <Input
+                                type="date"
+                                value={form.ngayDi}
+                                onChange={(e) =>
+                                    setForm((f) => ({
+                                        ...f,
+                                        ngayDi: e.target.value,
+                                    }))
+                                }
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <Label>Số khách</Label>
+                            <Input
+                                type="number"
+                                min={1}
+                                value={form.soLuongKhach}
+                                onChange={(e) =>
+                                    setForm((f) => ({
+                                        ...f,
+                                        soLuongKhach:
+                                            Number(e.target.value) || 1,
+                                    }))
+                                }
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <Label>Mã người dùng</Label>
+                            <Input
+                                type="number"
+                                value={form.maNguoiDung}
+                                onChange={(e) =>
+                                    setForm((f) => ({
+                                        ...f,
+                                        maNguoiDung:
+                                            Number(e.target.value) || 0,
+                                    }))
+                                }
+                            />
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                    setIsDialogOpen(false);
+                                    setEditingBooking(null);
+                                }}
+                            >
+                                Hủy
+                            </Button>
+                            <Button
+                                type="submit"
+                                disabled={
+                                    createBooking.isPending ||
+                                    updateBooking.isPending
+                                }
+                            >
+                                {editingBooking ? "Lưu thay đổi" : "Thêm"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

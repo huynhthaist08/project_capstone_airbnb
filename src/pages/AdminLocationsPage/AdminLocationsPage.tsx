@@ -30,12 +30,18 @@ const AdminLocationsPage = () => {
     const [pageIndex, setPageIndex] = useState(1);
     const pageSize = 10;
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    // [ADMIN] Trạng thái form dùng chung cho thêm/sửa vị trí
+    const [editingLocation, setEditingLocation] = useState<Location | null>(
+        null,
+    );
     const [form, setForm] = useState({
         tenViTri: "",
         tinhThanh: "",
         quocGia: "",
         hinhAnh: "",
     });
+    // [ADMIN] File hình khi sửa (upload chung trong form Sửa)
+    const [editImageFile, setEditImageFile] = useState<File | null>(null);
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
@@ -77,6 +83,30 @@ const AdminLocationsPage = () => {
         },
     });
 
+    const updateLocation = useMutation({
+        mutationFn: (payload: { id: number; data: Partial<Location> }) =>
+            LOCATION.update(payload.id, payload.data),
+        onSuccess: () => {
+            setIsDialogOpen(false);
+            setEditingLocation(null);
+            setForm({
+                tenViTri: "",
+                tinhThanh: "",
+                quocGia: "",
+                hinhAnh: "",
+            });
+            queryClient.invalidateQueries({ queryKey: ["admin-locations"] });
+        },
+    });
+
+    const uploadLocationImage = useMutation({
+        mutationFn: (payload: { id: number; file: File }) =>
+            LOCATION.uploadImage(payload.id, payload.file),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-locations"] });
+        },
+    });
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -107,7 +137,7 @@ const AdminLocationsPage = () => {
             </div>
 
             {/* Table */}
-            <div className="rounded-md border bg-background">
+            <div className="rounded-md border bg-background overflow-x-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -115,6 +145,7 @@ const AdminLocationsPage = () => {
                             <TableHead>Tên vị trí</TableHead>
                             <TableHead>Tỉnh thành</TableHead>
                             <TableHead>Quốc gia</TableHead>
+                            <TableHead>Hình ảnh</TableHead>
                             <TableHead className="w-25">Thao tác</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -127,6 +158,33 @@ const AdminLocationsPage = () => {
                                 <TableCell>{loc.tinhThanh}</TableCell>
                                 <TableCell>{loc.quocGia}</TableCell>
                                 <TableCell>
+                                    {loc.hinhAnh && (
+                                        <img
+                                            src={loc.hinhAnh}
+                                            alt={loc.tenViTri}
+                                            className="w-12 h-12 object-cover rounded"
+                                        />
+                                    )}
+                                </TableCell>
+                                <TableCell className="space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setEditingLocation(loc);
+                                            setForm({
+                                                tenViTri: loc.tenViTri ?? "",
+                                                tinhThanh:
+                                                    loc.tinhThanh ?? "",
+                                                quocGia: loc.quocGia ?? "",
+                                                hinhAnh: loc.hinhAnh ?? "",
+                                            });
+                                            setEditImageFile(null);
+                                            setIsDialogOpen(true);
+                                        }}
+                                    >
+                                        Sửa
+                                    </Button>
                                     <Button
                                         variant="destructive"
                                         size="sm"
@@ -192,13 +250,42 @@ const AdminLocationsPage = () => {
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Thêm vị trí</DialogTitle>
+                        <DialogTitle>
+                            {editingLocation ? "Sửa vị trí" : "Thêm vị trí"}
+                        </DialogTitle>
                     </DialogHeader>
                     <form
                         className="space-y-3 text-sm"
                         onSubmit={(e) => {
                             e.preventDefault();
-                            createLocation.mutate();
+                            if (editingLocation) {
+                                updateLocation.mutate(
+                                    {
+                                        id: editingLocation.id,
+                                        data: {
+                                            tenViTri: form.tenViTri.trim(),
+                                            tinhThanh: form.tinhThanh.trim(),
+                                            quocGia: form.quocGia.trim(),
+                                            hinhAnh:
+                                                form.hinhAnh.trim() ||
+                                                undefined,
+                                        },
+                                    },
+                                    {
+                                        onSuccess: () => {
+                                            if (editImageFile) {
+                                                uploadLocationImage.mutate({
+                                                    id: editingLocation.id,
+                                                    file: editImageFile,
+                                                });
+                                                setEditImageFile(null);
+                                            }
+                                        },
+                                    },
+                                );
+                            } else {
+                                createLocation.mutate();
+                            }
                         }}
                     >
                         <div className="space-y-1">
@@ -249,19 +336,41 @@ const AdminLocationsPage = () => {
                                 }
                             />
                         </div>
+                        {editingLocation && (
+                            <div className="space-y-1">
+                                <Label>Hình ảnh (upload mới)</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file =
+                                            e.target.files?.[0] ?? null;
+                                        setEditImageFile(file);
+                                    }}
+                                />
+                            </div>
+                        )}
                         <DialogFooter>
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => setIsDialogOpen(false)}
+                                onClick={() => {
+                                    setIsDialogOpen(false);
+                                    setEditingLocation(null);
+                                    setEditImageFile(null);
+                                }}
                             >
                                 Hủy
                             </Button>
                             <Button
                                 type="submit"
-                                disabled={createLocation.isPending}
+                                disabled={
+                                    createLocation.isPending ||
+                                    updateLocation.isPending ||
+                                    uploadLocationImage.isPending
+                                }
                             >
-                                Thêm vị trí
+                                {editingLocation ? "Lưu thay đổi" : "Thêm vị trí"}
                             </Button>
                         </DialogFooter>
                     </form>

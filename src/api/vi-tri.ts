@@ -25,10 +25,15 @@ const VI_TRI = {
     update: (id: number, data: Partial<Location>) =>
         apiInstance.put(`/vi-tri/${id}`, data),
     delete: (id: number) => apiInstance.delete(`/vi-tri/${id}`),
-    uploadImage: (formData: FormData) =>
-        apiInstance.post("/vi-tri/upload-hinh-vitri", formData, {
+    // [ADMIN] Upload hình vị trí theo đúng endpoint /vi-tri/upload-hinh-vitri?maViTri={id}
+    uploadImage: (id: number, file: File) => {
+        const formData = new FormData();
+        formData.append("formFile", file);
+        return apiInstance.post(`/vi-tri/upload-hinh-vitri`, formData, {
+            params: { maViTri: id },
             headers: { "Content-Type": "multipart/form-data" },
-        }),
+        });
+    },
 };
 
 export default VI_TRI;

@@ -24,6 +24,7 @@ import { useMemo, useState } from "react";
 import PHONG_THUE from "@/api/phong-thue";
 import LOCATION from "@/api/vi-tri";
 import type { Room } from "@/types/room.type";
+import type { Location } from "@/types/location.type";
 import { getPaginatedData } from "@/utils/apiResponse";
 
 const AdminRoomsPage = () => {
@@ -31,6 +32,8 @@ const AdminRoomsPage = () => {
     const [pageIndex, setPageIndex] = useState(1);
     const pageSize = 10;
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    // [ADMIN] Trạng thái form dùng chung cho thêm/sửa phòng
+    const [editingRoom, setEditingRoom] = useState<Room | null>(null);
     const [form, setForm] = useState({
         tenPhong: "",
         giaTien: 0,
@@ -38,6 +41,8 @@ const AdminRoomsPage = () => {
         maViTri: 0,
         hinhAnh: "",
     });
+    // [ADMIN] File hình khi sửa (upload chung trong form Sửa)
+    const [editImageFile, setEditImageFile] = useState<File | null>(null);
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
@@ -93,6 +98,31 @@ const AdminRoomsPage = () => {
                 maViTri: 0,
                 hinhAnh: "",
             });
+            queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
+        },
+    });
+
+    const updateRoom = useMutation({
+        mutationFn: (payload: { id: number; data: Partial<Room> }) =>
+            PHONG_THUE.update(payload.id, payload.data),
+        onSuccess: () => {
+            setIsDialogOpen(false);
+            setEditingRoom(null);
+            setForm({
+                tenPhong: "",
+                giaTien: 0,
+                khach: 1,
+                maViTri: 0,
+                hinhAnh: "",
+            });
+            queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
+        },
+    });
+
+    const uploadRoomImage = useMutation({
+        mutationFn: (payload: { id: number; file: File }) =>
+            PHONG_THUE.uploadImage(payload.id, payload.file),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
         },
     });
@@ -156,7 +186,25 @@ const AdminRoomsPage = () => {
                                 </TableCell>
                                 <TableCell>${room.giaTien}</TableCell>
                                 <TableCell>{room.khach}</TableCell>
-                                <TableCell>
+                                <TableCell className="space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setEditingRoom(room);
+                                            setForm({
+                                                tenPhong: room.tenPhong,
+                                                giaTien: room.giaTien,
+                                                khach: room.khach,
+                                                maViTri: room.maViTri,
+                                                hinhAnh: room.hinhAnh ?? "",
+                                            });
+                                            setEditImageFile(null);
+                                            setIsDialogOpen(true);
+                                        }}
+                                    >
+                                        Sửa
+                                    </Button>
                                     <Button
                                         variant="destructive"
                                         size="sm"
@@ -223,13 +271,45 @@ const AdminRoomsPage = () => {
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Thêm phòng</DialogTitle>
+                        <DialogTitle>
+                            {editingRoom ? "Sửa phòng" : "Thêm phòng"}
+                        </DialogTitle>
                     </DialogHeader>
                     <form
                         className="space-y-3 text-sm"
                         onSubmit={(e) => {
                             e.preventDefault();
-                            createRoom.mutate();
+                            if (editingRoom) {
+                                updateRoom.mutate(
+                                    {
+                                        id: editingRoom.id,
+                                        data: {
+                                            tenPhong: form.tenPhong.trim(),
+                                            giaTien:
+                                                Number(form.giaTien) || 0,
+                                            khach: Number(form.khach) || 1,
+                                            maViTri:
+                                                Number(form.maViTri) || 0,
+                                            hinhAnh:
+                                                form.hinhAnh.trim() ||
+                                                undefined,
+                                        },
+                                    },
+                                    {
+                                        onSuccess: () => {
+                                            if (editImageFile) {
+                                                uploadRoomImage.mutate({
+                                                    id: editingRoom.id,
+                                                    file: editImageFile,
+                                                });
+                                                setEditImageFile(null);
+                                            }
+                                        },
+                                    },
+                                );
+                            } else {
+                                createRoom.mutate();
+                            }
                         }}
                     >
                         <div className="space-y-1">
@@ -318,19 +398,41 @@ const AdminRoomsPage = () => {
                                 }
                             />
                         </div>
+                        {editingRoom && (
+                            <div className="space-y-1">
+                                <Label>Hình ảnh (upload mới)</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file =
+                                            e.target.files?.[0] ?? null;
+                                        setEditImageFile(file);
+                                    }}
+                                />
+                            </div>
+                        )}
                         <DialogFooter>
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => setIsDialogOpen(false)}
+                                onClick={() => {
+                                    setIsDialogOpen(false);
+                                    setEditingRoom(null);
+                                    setEditImageFile(null);
+                                }}
                             >
                                 Hủy
                             </Button>
                             <Button
                                 type="submit"
-                                disabled={createRoom.isPending}
+                                disabled={
+                                    createRoom.isPending ||
+                                    updateRoom.isPending ||
+                                    uploadRoomImage.isPending
+                                }
                             >
-                                Thêm phòng
+                                {editingRoom ? "Lưu thay đổi" : "Thêm phòng"}
                             </Button>
                         </DialogFooter>
                     </form>

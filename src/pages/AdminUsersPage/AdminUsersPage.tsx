@@ -23,14 +23,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import type { User } from "@/types/user.type";
-import apiInstance from "@/shared/services/api";
 import { getPaginatedData } from "@/utils/apiResponse";
+import USERS from "@/api/users";
 
 const AdminUsersPage = () => {
     const [keyword, setKeyword] = useState("");
     const [pageIndex, setPageIndex] = useState(1);
     const pageSize = 10;
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -38,17 +39,17 @@ const AdminUsersPage = () => {
         phone: "",
     });
     const [showPassword, setShowPassword] = useState(false);
+    // [ADMIN] File avatar khi sửa (upload chung trong form Sửa)
+    const [editAvatarFile, setEditAvatarFile] = useState<File | null>(null);
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
         queryKey: ["admin-users", keyword, pageIndex],
         queryFn: () =>
-            apiInstance.get("/users/phan-trang-tim-kiem", {
-                params: {
-                    pageIndex,
-                    pageSize,
-                    keyword: keyword || undefined,
-                },
+            USERS.getPaginated({
+                pageIndex,
+                pageSize,
+                keyword: keyword || undefined,
             }),
     });
 
@@ -56,13 +57,39 @@ const AdminUsersPage = () => {
 
     const createUser = useMutation({
         mutationFn: () =>
-            apiInstance.post("/users", {
-                ...form,
-                id: 0,
+            USERS.create({
+                name: form.name.trim(),
+                email: form.email.trim(),
+                password: form.password,
+                phone: form.phone.trim() || undefined,
                 role: "ADMIN",
             }),
         onSuccess: () => {
             setIsDialogOpen(false);
+            setForm({
+                name: "",
+                email: "",
+                password: "",
+                phone: "",
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["admin-users"],
+            });
+        },
+    });
+
+    const updateUser = useMutation({
+        mutationFn: (payload: { id: number; data: Partial<User> }) =>
+            USERS.update(payload.id, payload.data),
+        onSuccess: () => {
+            setIsDialogOpen(false);
+            setEditingUser(null);
+            setForm({
+                name: "",
+                email: "",
+                password: "",
+                phone: "",
+            });
             queryClient.invalidateQueries({
                 queryKey: ["admin-users"],
             });
@@ -70,7 +97,17 @@ const AdminUsersPage = () => {
     });
 
     const deleteUser = useMutation({
-        mutationFn: (id: number) => apiInstance.delete(`/users/${id}`),
+        mutationFn: (id: number) => USERS.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["admin-users"],
+            });
+        },
+    });
+
+    const uploadAvatar = useMutation({
+        mutationFn: (payload: { id: number; file: File }) =>
+            USERS.uploadAvatar(payload.id, payload.file),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["admin-users"],
@@ -111,13 +148,14 @@ const AdminUsersPage = () => {
             </div>
 
             {/* Table */}
-            <div className="rounded-md border bg-background">
+            <div className="rounded-md border bg-background overflow-x-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead>ID</TableHead>
                             <TableHead>Tên</TableHead>
                             <TableHead>Email</TableHead>
+                            <TableHead>Avatar</TableHead>
                             <TableHead>Role</TableHead>
                             <TableHead className="w-30">Thao tác</TableHead>
                         </TableRow>
@@ -128,8 +166,34 @@ const AdminUsersPage = () => {
                                 <TableCell>{u.id}</TableCell>
                                 <TableCell>{u.name}</TableCell>
                                 <TableCell>{u.email}</TableCell>
-                                <TableCell>{u.role ?? "USER"}</TableCell>
                                 <TableCell>
+                                    {u.avatar && (
+                                        <img
+                                            src={u.avatar}
+                                            alt={u.name}
+                                            className="w-10 h-10 rounded-full object-cover"
+                                        />
+                                    )}
+                                </TableCell>
+                                <TableCell>{u.role ?? "USER"}</TableCell>
+                                <TableCell className="space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setEditingUser(u);
+                                            setForm({
+                                                name: u.name,
+                                                email: u.email,
+                                                password: "",
+                                                phone: u.phone ?? "",
+                                            });
+                                            setEditAvatarFile(null);
+                                            setIsDialogOpen(true);
+                                        }}
+                                    >
+                                        Sửa
+                                    </Button>
                                     <Button
                                         variant="destructive"
                                         size="sm"
@@ -190,18 +254,51 @@ const AdminUsersPage = () => {
                 </div>
             )}
 
-            {/* Dialog Add User */}
+            {/* Dialog Add/Edit User */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Thêm quản trị viên</DialogTitle>
+                        <DialogTitle>
+                            {editingUser
+                                ? "Sửa thông tin quản trị viên"
+                                : "Thêm quản trị viên"}
+                        </DialogTitle>
                     </DialogHeader>
 
                     <form
                         className="space-y-4"
                         onSubmit={(e) => {
                             e.preventDefault();
-                            createUser.mutate();
+                            if (editingUser) {
+                                updateUser.mutate(
+                                    {
+                                        id: editingUser.id,
+                                        data: {
+                                            name: form.name.trim(),
+                                            email: form.email.trim(),
+                                            phone:
+                                                form.phone.trim() || undefined,
+                                            // Không bắt buộc đổi password khi sửa
+                                            ...(form.password
+                                                ? { password: form.password }
+                                                : {}),
+                                        },
+                                    },
+                                    {
+                                        onSuccess: () => {
+                                            if (editAvatarFile) {
+                                                uploadAvatar.mutate({
+                                                    id: editingUser.id,
+                                                    file: editAvatarFile,
+                                                });
+                                                setEditAvatarFile(null);
+                                            }
+                                        },
+                                    },
+                                );
+                            } else {
+                                createUser.mutate();
+                            }
                         }}
                     >
                         <div className="space-y-2">
@@ -268,20 +365,42 @@ const AdminUsersPage = () => {
                                 </button>
                             </div>
                         </div>
+                        {editingUser && (
+                            <div className="space-y-2">
+                                <Label>Avatar (upload mới)</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file =
+                                            e.target.files?.[0] ?? null;
+                                        setEditAvatarFile(file);
+                                    }}
+                                />
+                            </div>
+                        )}
 
                         <DialogFooter>
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => setIsDialogOpen(false)}
+                                onClick={() => {
+                                    setIsDialogOpen(false);
+                                    setEditingUser(null);
+                                    setEditAvatarFile(null);
+                                }}
                             >
                                 Hủy
                             </Button>
                             <Button
                                 type="submit"
-                                disabled={createUser.isPending}
+                                disabled={
+                                    createUser.isPending ||
+                                    updateUser.isPending ||
+                                    uploadAvatar.isPending
+                                }
                             >
-                                Thêm
+                                {editingUser ? "Lưu thay đổi" : "Thêm"}
                             </Button>
                         </DialogFooter>
                     </form>
