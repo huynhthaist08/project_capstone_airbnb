@@ -11,7 +11,7 @@ const ProfilePage = () => {
   if (!authUser) {
     return (
       <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
-        <h3 className="text-yellow-700 font-semibold">⚠️ Chưa đăng nhập</h3>
+        <h3 className="text-yellow-700 font-semibold">   Chưa đăng nhập</h3>
         <p className="text-yellow-600 text-sm">Vui lòng đăng nhập để xem thông tin profile</p>
       </div>
     );

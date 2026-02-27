@@ -1,131 +1,147 @@
 /**
  * AdminRoomsPage: trang admin quản lý phòng — bảng phân trang + tìm kiếm, thêm/sửa/xóa phòng (form có chọn vị trí); gọi API phong-thue và vi-tri.
  */
-import { Button } from "@/core/ui/button";
-import { Input } from "@/core/ui/input";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/core/ui/table";
+    RoomsSearchBar,
+    RoomsTable,
+    RoomsPagination,
+    RoomDialog,
+} from "./components";
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/core/ui/dialog";
-import { Label } from "@/core/ui/label";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import PHONG_THUE from "@/api/phong-thue";
-import LOCATION from "@/api/vi-tri";
-import type { Room } from "@/types/room.type";
-import type { Location } from "@/types/location.type";
-import { getPaginatedData } from "@/utils/apiResponse";
+    useGetAdminRooms,
+    useCreateAdminRoom,
+    useUpdateAdminRoom,
+    useDeleteAdminRoom,
+    useUploadRoomImage,
+    useGetLocations,
+} from "./hook";
+import type { Room, RoomFormData } from "./server";
+
+const getDefaultFormState = (): RoomFormData => ({
+    tenPhong: "",
+    khach: 1,
+    phongNgu: 0,
+    giuong: 0,
+    phongTam: 0,
+    moTa: "",
+    giaTien: 0,
+    mayGiat: false,
+    banLa: false,
+    tivi: false,
+    dieuHoa: false,
+    wifi: false,
+    bep: false,
+    doXe: false,
+    hoBoi: false,
+    banUi: false,
+    maViTri: 0,
+    hinhAnh: "",
+});
 
 const AdminRoomsPage = () => {
     const [keyword, setKeyword] = useState("");
     const [pageIndex, setPageIndex] = useState(1);
-    const pageSize = 10;
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    // [ADMIN] Trạng thái form dùng chung cho thêm/sửa phòng
     const [editingRoom, setEditingRoom] = useState<Room | null>(null);
-    const [form, setForm] = useState({
-        tenPhong: "",
-        giaTien: 0,
-        khach: 1,
-        maViTri: 0,
-        hinhAnh: "",
-    });
-    // [ADMIN] File hình khi sửa (upload chung trong form Sửa)
     const [editImageFile, setEditImageFile] = useState<File | null>(null);
+    const [form, setForm] = useState<RoomFormData>(getDefaultFormState());
+
+    const pageSize = 10;
     const queryClient = useQueryClient();
 
-    const { data } = useQuery({
-        queryKey: ["admin-rooms", keyword, pageIndex],
-        queryFn: () =>
-            PHONG_THUE.getPaginated({
-                pageIndex,
-                pageSize,
-                keyword: keyword || undefined,
-            }),
-    });
-
-    const { data: roomList, totalPage } = getPaginatedData<Room>(data);
-
-    const { data: locationsRes } = useQuery({
-        queryKey: ["admin-room-locations"],
-        queryFn: () => LOCATION.getAll(),
-    });
-
-    const locationOptions = useMemo(
-        () =>
-            ((locationsRes?.data?.content ?? []) as Location[]).map((loc) => ({
-                id: loc.id,
-                label: `${loc.tenViTri ?? ""}${
-                    loc.tinhThanh ? `, ${loc.tinhThanh}` : ""
-                }`,
-            })),
-        [locationsRes],
+    // Hooks
+    const { roomList, totalPage } = useGetAdminRooms(
+        pageIndex,
+        pageSize,
+        keyword,
     );
+    const { locationOptions } = useGetLocations();
+    const createRoom = useCreateAdminRoom();
+    const updateRoom = useUpdateAdminRoom();
+    const deleteRoom = useDeleteAdminRoom();
+    const uploadRoomImage = useUploadRoomImage();
 
-    const deleteRoom = useMutation({
-        mutationFn: (id: number) => PHONG_THUE.delete(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
-        },
-    });
+    // Handlers
+    const handleSearch = () => {
+        queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
+    };
 
-    const createRoom = useMutation({
-        mutationFn: () =>
-            PHONG_THUE.create({
-                tenPhong: form.tenPhong.trim(),
-                giaTien: Number(form.giaTien) || 0,
-                khach: Number(form.khach) || 1,
-                maViTri: Number(form.maViTri) || 0,
-                hinhAnh: form.hinhAnh.trim() || undefined,
-            }),
-        onSuccess: () => {
-            setIsDialogOpen(false);
-            setForm({
-                tenPhong: "",
-                giaTien: 0,
-                khach: 1,
-                maViTri: 0,
-                hinhAnh: "",
+    const handleAddNew = () => {
+        setEditingRoom(null);
+        setForm(getDefaultFormState());
+        setEditImageFile(null);
+        setIsDialogOpen(true);
+    };
+
+    const handleEdit = (room: Room) => {
+        setEditingRoom(room);
+        setForm({
+            tenPhong: room.tenPhong,
+            khach: room.khach,
+            phongNgu: room.phongNgu,
+            giuong: room.giuong,
+            phongTam: room.phongTam,
+            moTa: room.moTa,
+            giaTien: room.giaTien,
+            mayGiat: room.mayGiat,
+            banLa: room.banLa,
+            tivi: room.tivi,
+            dieuHoa: room.dieuHoa,
+            wifi: room.wifi,
+            bep: room.bep,
+            doXe: room.doXe,
+            hoBoi: room.hoBoi,
+            banUi: room.banUi,
+            maViTri: room.maViTri,
+            hinhAnh: room.hinhAnh ?? "",
+        });
+        setEditImageFile(null);
+        setIsDialogOpen(true);
+    };
+
+    const handleDelete = (id: number) => {
+        deleteRoom.mutate(id);
+    };
+
+    const handleDialogClose = () => {
+        setIsDialogOpen(false);
+        setEditingRoom(null);
+        setEditImageFile(null);
+        setForm(getDefaultFormState());
+    };
+
+    const handleSubmit = () => {
+        if (editingRoom) {
+            updateRoom.mutate(
+                { id: editingRoom.id, data: form },
+                {
+                    onSuccess: () => {
+                        if (editImageFile) {
+                            uploadRoomImage.mutate({
+                                id: editingRoom.id,
+                                file: editImageFile,
+                            });
+                            setEditImageFile(null);
+                        }
+                        handleDialogClose();
+                    },
+                },
+            );
+        } else {
+            createRoom.mutate(form, {
+                onSuccess: () => {
+                    handleDialogClose();
+                },
             });
-            queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
-        },
-    });
+        }
+    };
 
-    const updateRoom = useMutation({
-        mutationFn: (payload: { id: number; data: Partial<Room> }) =>
-            PHONG_THUE.update(payload.id, payload.data),
-        onSuccess: () => {
-            setIsDialogOpen(false);
-            setEditingRoom(null);
-            setForm({
-                tenPhong: "",
-                giaTien: 0,
-                khach: 1,
-                maViTri: 0,
-                hinhAnh: "",
-            });
-            queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
-        },
-    });
-
-    const uploadRoomImage = useMutation({
-        mutationFn: (payload: { id: number; file: File }) =>
-            PHONG_THUE.uploadImage(payload.id, payload.file),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["admin-rooms"] });
-        },
-    });
+    const isLoading =
+        createRoom.isPending ||
+        updateRoom.isPending ||
+        uploadRoomImage.isPending;
 
     return (
         <div className="space-y-6">
@@ -135,309 +151,40 @@ const AdminRoomsPage = () => {
             </div>
 
             {/* Search */}
-            <div className="flex flex-wrap gap-2">
-                <Input
-                    placeholder="Nhập tên phòng..."
-                    className="max-w-xs"
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                />
-                <Button
-                    onClick={() =>
-                        queryClient.invalidateQueries({
-                            queryKey: ["admin-rooms"],
-                        })
-                    }
-                >
-                    Tìm
-                </Button>
-                <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
-                    Thêm phòng
-                </Button>
-            </div>
+            <RoomsSearchBar
+                keyword={keyword}
+                onKeywordChange={setKeyword}
+                onSearch={handleSearch}
+                onAddNew={handleAddNew}
+            />
 
             {/* Table */}
-            <div className="rounded-md border bg-background overflow-x-auto">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>ID</TableHead>
-                            <TableHead>Tên phòng</TableHead>
-                            <TableHead>Hình ảnh</TableHead>
-                            <TableHead>Giá</TableHead>
-                            <TableHead>Khách</TableHead>
-                            <TableHead className="w-25">Thao tác</TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                        {roomList.map((room) => (
-                            <TableRow key={room.id}>
-                                <TableCell>{room.id}</TableCell>
-                                <TableCell>{room.tenPhong}</TableCell>
-                                <TableCell>
-                                    {room.hinhAnh && (
-                                        <img
-                                            src={room.hinhAnh}
-                                            alt={room.tenPhong}
-                                            className="w-12 h-12 object-cover rounded"
-                                        />
-                                    )}
-                                </TableCell>
-                                <TableCell>${room.giaTien}</TableCell>
-                                <TableCell>{room.khach}</TableCell>
-                                <TableCell className="space-x-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => {
-                                            setEditingRoom(room);
-                                            setForm({
-                                                tenPhong: room.tenPhong,
-                                                giaTien: room.giaTien,
-                                                khach: room.khach,
-                                                maViTri: room.maViTri,
-                                                hinhAnh: room.hinhAnh ?? "",
-                                            });
-                                            setEditImageFile(null);
-                                            setIsDialogOpen(true);
-                                        }}
-                                    >
-                                        Sửa
-                                    </Button>
-                                    <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() =>
-                                            deleteRoom.mutate(room.id)
-                                        }
-                                    >
-                                        Xóa
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
+            <RoomsTable
+                rooms={roomList}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
 
             {/* Pagination */}
-            {totalPage > 1 && (
-                <div className="flex justify-center pt-2">
-                    <div className="inline-flex items-center gap-2 text-xs sm:text-sm">
-                        <button
-                            type="button"
-                            className="px-2 py-1 text-muted-foreground disabled:opacity-40"
-                            disabled={pageIndex === 1}
-                            onClick={() =>
-                                setPageIndex((p) => Math.max(1, p - 1))
-                            }
-                        >
-                            &lt; Trước
-                        </button>
-                        {Array.from(
-                            { length: Math.min(10, totalPage) },
-                            (_, i) => i + 1,
-                        ).map((page) => (
-                            <button
-                                key={page}
-                                type="button"
-                                onClick={() => setPageIndex(page)}
-                                className={`px-3 py-1 rounded border ${
-                                    pageIndex === page
-                                        ? "border-primary text-primary"
-                                        : "border-transparent text-muted-foreground hover:border-muted-foreground"
-                                }`}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                        {totalPage > 10 && <span className="px-1">...</span>}
-                        <button
-                            type="button"
-                            className="px-2 py-1 text-muted-foreground disabled:opacity-40"
-                            disabled={pageIndex === totalPage}
-                            onClick={() =>
-                                setPageIndex((p) => Math.min(totalPage, p + 1))
-                            }
-                        >
-                            Sau &gt;
-                        </button>
-                    </div>
-                </div>
-            )}
+            <RoomsPagination
+                pageIndex={pageIndex}
+                totalPage={totalPage}
+                onPageChange={setPageIndex}
+            />
 
-            {/* Dialog thêm phòng */}
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>
-                            {editingRoom ? "Sửa phòng" : "Thêm phòng"}
-                        </DialogTitle>
-                    </DialogHeader>
-                    <form
-                        className="space-y-3 text-sm"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            if (editingRoom) {
-                                updateRoom.mutate(
-                                    {
-                                        id: editingRoom.id,
-                                        data: {
-                                            tenPhong: form.tenPhong.trim(),
-                                            giaTien:
-                                                Number(form.giaTien) || 0,
-                                            khach: Number(form.khach) || 1,
-                                            maViTri:
-                                                Number(form.maViTri) || 0,
-                                            hinhAnh:
-                                                form.hinhAnh.trim() ||
-                                                undefined,
-                                        },
-                                    },
-                                    {
-                                        onSuccess: () => {
-                                            if (editImageFile) {
-                                                uploadRoomImage.mutate({
-                                                    id: editingRoom.id,
-                                                    file: editImageFile,
-                                                });
-                                                setEditImageFile(null);
-                                            }
-                                        },
-                                    },
-                                );
-                            } else {
-                                createRoom.mutate();
-                            }
-                        }}
-                    >
-                        <div className="space-y-1">
-                            <Label>Tên phòng</Label>
-                            <Input
-                                value={form.tenPhong}
-                                onChange={(e) =>
-                                    setForm((f) => ({
-                                        ...f,
-                                        tenPhong: e.target.value,
-                                    }))
-                                }
-                            />
-                        </div>
-                        <div className="space-y-1">
-                            <Label>Giá / đêm</Label>
-                            <Input
-                                type="number"
-                                value={form.giaTien}
-                                onChange={(e) =>
-                                    setForm((f) => ({
-                                        ...f,
-                                        giaTien: Number(e.target.value) || 0,
-                                    }))
-                                }
-                            />
-                        </div>
-                        <div className="space-y-1">
-                            <Label>Số khách tối đa</Label>
-                            <Input
-                                type="number"
-                                min={1}
-                                value={form.khach}
-                                onChange={(e) =>
-                                    setForm((f) => ({
-                                        ...f,
-                                        khach: Number(e.target.value) || 1,
-                                    }))
-                                }
-                            />
-                        </div>
-                        <div className="space-y-1">
-                            <Label>Vị trí</Label>
-                            {locationOptions.length > 0 ? (
-                                <select
-                                    className="w-full border rounded-md px-3 py-2 text-sm bg-background"
-                                    value={form.maViTri || ""}
-                                    onChange={(e) =>
-                                        setForm((f) => ({
-                                            ...f,
-                                            maViTri: Number(e.target.value),
-                                        }))
-                                    }
-                                >
-                                    <option value="">Chọn vị trí</option>
-                                    {locationOptions.map((opt) => (
-                                        <option key={opt.id} value={opt.id}>
-                                            {opt.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            ) : (
-                                <Input
-                                    type="number"
-                                    placeholder="Nhập mã vị trí"
-                                    value={form.maViTri}
-                                    onChange={(e) =>
-                                        setForm((f) => ({
-                                            ...f,
-                                            maViTri:
-                                                Number(e.target.value) || 0,
-                                        }))
-                                    }
-                                />
-                            )}
-                        </div>
-                        <div className="space-y-1">
-                            <Label>Hình ảnh (URL)</Label>
-                            <Input
-                                value={form.hinhAnh}
-                                onChange={(e) =>
-                                    setForm((f) => ({
-                                        ...f,
-                                        hinhAnh: e.target.value,
-                                    }))
-                                }
-                            />
-                        </div>
-                        {editingRoom && (
-                            <div className="space-y-1">
-                                <Label>Hình ảnh (upload mới)</Label>
-                                <Input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                        const file =
-                                            e.target.files?.[0] ?? null;
-                                        setEditImageFile(file);
-                                    }}
-                                />
-                            </div>
-                        )}
-                        <DialogFooter>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => {
-                                    setIsDialogOpen(false);
-                                    setEditingRoom(null);
-                                    setEditImageFile(null);
-                                }}
-                            >
-                                Hủy
-                            </Button>
-                            <Button
-                                type="submit"
-                                disabled={
-                                    createRoom.isPending ||
-                                    updateRoom.isPending ||
-                                    uploadRoomImage.isPending
-                                }
-                            >
-                                {editingRoom ? "Lưu thay đổi" : "Thêm phòng"}
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+            {/* Dialog */}
+            <RoomDialog
+                isOpen={isDialogOpen}
+                editingRoom={editingRoom}
+                form={form}
+                onFormChange={setForm}
+                onClose={handleDialogClose}
+                onSubmit={handleSubmit}
+                isLoading={isLoading}
+                locationOptions={locationOptions}
+                editImageFile={editImageFile}
+                onImageFileChange={setEditImageFile}
+            />
         </div>
     );
 };

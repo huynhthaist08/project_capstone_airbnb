@@ -22,6 +22,12 @@ export const useSignInForm = () => {
       return login(payload.email, payload.password)
     },
     onSuccess: ({ token, user }) => {
+      // Kiểm tra xem có phải USER (không phải ADMIN)
+      if (user.role !== 'USER') {
+        toast.error('Tài khoản này không có quyền truy cập. Vui lòng sử dụng tài khoản người dùng.')
+        return
+      }
+
       // Đồng bộ Redux store với thông tin đã lưu trong AuthContext
       dispatch(setCredentials({ token, user }))
 

@@ -40,7 +40,7 @@ export const useMutaRegister = () => {
       
       // Check if email already exists
       if (errorMsg.toLowerCase().includes('email') || errorMsg.toLowerCase().includes('tồn tại')) {
-        toast.error('❌ Email này đã được đăng ký. Vui lòng sử dụng email khác.')
+        toast.error('    Email này đã được đăng ký. Vui lòng sử dụng email khác.')
       } else {
         toast.error(errorMsg)
       }

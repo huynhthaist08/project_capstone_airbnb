@@ -2,6 +2,7 @@
 export const PRIVATE_PATH = {
     PROFILE: "/profile",
     ADMIN: "/admin",
+    ADMIN_SIGN_IN: "/admin/dang-nhap",
     ADMIN_USERS: "/admin/QuanLyNguoiDung",
     ADMIN_LOCATIONS: "/admin/QuanLyViTri",
     ADMIN_ROOMS: "/admin/QuanLyPhong",
@@ -16,7 +17,6 @@ export const PUBLIC_PATH = {
     ROOMS_BY_LOCATION: "/phong-thue/lay-phong-theo-vi-tri",
     ROOM_DETAIL: "/phong-thue",
     NOT_FOUND: "*",
-
     EXPERIENCE: "/trai-nghiem",
     SERVICE: "/dich-vu",
 };
