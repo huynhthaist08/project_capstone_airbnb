@@ -8,7 +8,7 @@ import type {
     PaginatedResponse,
     User,
     UserPaginatedParams,
-} from "@/types/user.type";
+} from "./user.type";
 
 const USERS = {
     // [ADMIN] Lấy danh sách user phân trang + tìm kiếm
@@ -34,7 +34,7 @@ const USERS = {
         apiInstance.put(`/users/${id}`, data),
 
     // [ADMIN] Xóa user theo id
-    delete: (id: number) => apiInstance.delete(`/users/${id}`),
+    delete: (id: number) => apiInstance.delete(`/users`, { params: { id } }),
 
     // [ADMIN] Upload avatar cho user
     uploadAvatar: (id: number, file: File) => {

@@ -9,7 +9,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 import { useAuth } from "@/context/AuthContext";
-import { PUBLIC_PATH } from "./path";
+import { PRIVATE_PATH } from "./path";
 
 type AdminRouteProps = {
     children: ReactNode;
@@ -19,11 +19,15 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     const { user, isReady } = useAuth();
     const location = useLocation();
 
-    // Khi user không phải ADMIN hoặc chưa đăng nhập, hiển thị thông báo quyền hạn (chạy trong effect để tránh lặp lại nhiều lần).
+    // Khi user không phải ADMIN hoặc chưa đăng nhập, hiển thị thông báo (chạy trong effect để tránh lặp lại nhiều lần).
     useEffect(() => {
         if (!isReady) return;
-        if (!user || user.role !== "ADMIN") {
-            toast.error("Không đủ quyền truy cập");
+        if (!user) {
+            // Chưa đăng nhập - sẽ được redirect đến trang login
+            return;
+        }
+        if (user.role !== "ADMIN") {
+            toast.error("Tài khoản này không có quyền truy cập admin");
         }
     }, [isReady, user]);
 
@@ -35,7 +39,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     if (!user || user.role !== "ADMIN") {
         return (
             <Navigate
-                to={PUBLIC_PATH.HOME}
+                to={PRIVATE_PATH.ADMIN_SIGN_IN}
                 replace
                 state={{ from: location.pathname }}
             />

@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/core/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { getAny, getContent, getContentArray } from "@/utils/apiResponse";
 import type { Booking } from "@/types/booking.type";
-
+import { toast } from 'sonner'
 const RoomDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const roomId = Number(id);
@@ -59,13 +59,13 @@ const RoomDetailPage = () => {
             return DAT_PHONG.create(payload);
         },
         onSuccess: (data) => {
-            console.log("✅ Booking created successfully:", data);
+            console.log("  Booking created successfully:", data);
             setBookingError("");
             queryClient.invalidateQueries({ queryKey: ["dat-phong"] });
             alert("Đặt phòng thành công!");
         },
         onError: (err: unknown) => {
-            console.error("❌ Booking error:", err);
+            console.error("    Booking error:", err);
             const msg =
                 (err as { response?: { data?: { message?: string } } })
                     ?.response?.data?.message ?? "Đặt phòng thất bại.";
@@ -174,31 +174,41 @@ const RoomDetailPage = () => {
         
         if (!user) {
             setBookingError("Vui lòng đăng nhập để đặt phòng.");
-            console.log("❌ User not logged in");
+            console.log(" User not logged in");
             return;
         }
+
+        //  Kiểm tra role: chỉ USER được đặt phòng, không phải ADMIN
+        if (user.role !== "USER") {
+            setBookingError("Tài khoản admin không thể đặt phòng.");
+            console.log(" Admin cannot book rooms");
+            toast.error('Người dùng chưa đăng nhập tài khoản. Vui lòng đăng nhập bằng tài khoản người dùng để đặt phòng.')
+            return;
+        }
+       
+
         if (!ngayDen || !ngayDi) {
             setBookingError("Vui lòng chọn ngày đến và ngày đi.");
-            console.log("❌ Missing dates");
+            console.log("    Missing dates");
             return;
         }
 
         // Kiểm tra ngày đi phải sau ngày đến
         if (new Date(ngayDi) <= new Date(ngayDen)) {
             setBookingError("Ngày trả phòng phải sau ngày nhận phòng.");
-            console.log("❌ Invalid date range");
+            console.log("    Invalid date range");
             return;
         }
 
         // Kiểm tra xem có trùng lịch với booking nào không
         if (checkDateConflict(ngayDen, ngayDi)) {
             setBookingError("Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.");
-            console.log("❌ Date conflict with existing booking");
+            console.log("    Date conflict with existing booking");
             return;
         }
 
         setBookingError("");
-        console.log("✅ Creating booking...", {
+        console.log("  Creating booking...", {
             maPhong: roomId,
             ngayDen,
             ngayDi,

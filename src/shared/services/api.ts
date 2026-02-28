@@ -35,14 +35,14 @@ apiInstance.interceptors.request.use((config) => {
 
 apiInstance.interceptors.response.use(
     (res) => {
-        console.log(`✅ API Response: ${res.status}`, {
+        console.log(`  API Response: ${res.status}`, {
             url: res.config.url,
             data: res.data,
         });
         return res;
     },
     (error) => {
-        console.error(`❌ API Error: ${error.response?.status}`, {
+        console.error(`    API Error: ${error.response?.status}`, {
             url: error.config?.url,
             message: error.message,
             data: error.response?.data,

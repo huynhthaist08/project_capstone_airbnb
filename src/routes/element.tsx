@@ -8,6 +8,7 @@ import { PRIVATE_PATH, PUBLIC_PATH } from "./path";
 import HomePage from "@/pages/HomePage/HomePage";
 import { SignUpPage } from "@/pages/SignUpPage";
 import SignInPage from "@/pages/SignInPage/components/SignInPage";
+import AdminSignInPage from "@/pages/AdminSignInPage/components/AdminSignInPage";
 import AdminLayout from "@/pages/AdminLayout/AdminLayout";
 import AdminUsersPage from "@/pages/AdminUsersPage/AdminUsersPage";
 import AdminLocationsPage from "@/pages/AdminLocationsPage/AdminLocationsPage";
@@ -67,6 +68,12 @@ const element = createBrowserRouter([
                 element: <RoomDetailPage />,
             },
         ],
+    },
+
+    // Admin login - công khai, không cần được bảo vệ
+    {
+        path: PRIVATE_PATH.ADMIN_SIGN_IN,
+        element: <AdminSignInPage />,
     },
 
     {
