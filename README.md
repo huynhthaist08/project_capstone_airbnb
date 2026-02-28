@@ -21,11 +21,11 @@ Dự án **BC89 - Nhóm 1 - Website đặt phòng Airbnb** là ứng dụng web 
 
 ### Thạch Lâm Huỳnh Thái
 - Phụ trách xây dựng giao diện ứng dụng người dùng (client)
-- Tham gia thiết kế và triển khai logic xử lý API, quản lý luồng dữ liệu phía client
+- Tham gia hỗ trợ thiết kế và triển khai logic xử lý API, quản lý luồng dữ liệu phía client
 
 ### Nguyễn Hồng Thắm
 - Phụ trách xây dựng giao diện quản trị hệ thống (admin dashboard)
-- Tham gia thiết kế và triển khai logic xử lý API cho các chức năng quản lý và luồng dữ liệu phía client
+- Thiết kế và triển khai chính về logic xử lý API cho các chức năng quản lý và luồng dữ liệu phía client
 
 ## Tính năng chính
 
