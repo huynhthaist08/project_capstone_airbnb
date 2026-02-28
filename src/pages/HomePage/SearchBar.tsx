@@ -46,7 +46,6 @@ const SearchBar = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // #region agent log
         fetch(
             "http://127.0.0.1:7242/ingest/63ff0b0f-a8bb-4ee4-a272-70366248b530",
             {
@@ -66,7 +65,6 @@ const SearchBar = () => {
                 }),
             },
         ).catch(() => {});
-        // #endregion agent log
 
         // Yêu cầu: phải chọn vị trí và nhập ngày đến/ngày đi trước khi tìm
         if (!selectedId) {
