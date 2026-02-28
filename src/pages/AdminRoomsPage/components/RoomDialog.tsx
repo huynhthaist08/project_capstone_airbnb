@@ -8,7 +8,6 @@ import {
     DialogTitle,
 } from "@/core/ui/dialog";
 import { Label } from "@/core/ui/label";
-import { useState, useEffect } from "react";
 import type { Room, RoomFormData } from "../server";
 
 interface RoomDialogProps {
@@ -20,8 +19,6 @@ interface RoomDialogProps {
     onSubmit: () => void;
     isLoading: boolean;
     locationOptions: Array<{ id: number; label: string }>;
-    editImageFile?: File | null;
-    onImageFileChange?: (file: File | null) => void;
 }
 
 export const RoomDialog = ({
@@ -33,8 +30,6 @@ export const RoomDialog = ({
     onSubmit,
     isLoading,
     locationOptions,
-    editImageFile,
-    onImageFileChange,
 }: RoomDialogProps) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -223,10 +218,7 @@ export const RoomDialog = ({
                             <Input
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0] ?? null;
-                                    onImageFileChange?.(file);
-                                }}
+                                onChange={() => {}}
                             />
                         </div>
                     )}

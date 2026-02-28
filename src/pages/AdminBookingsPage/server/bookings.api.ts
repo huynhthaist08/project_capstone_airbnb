@@ -1,5 +1,5 @@
 import DAT_PHONG from "@/api/dat-phong";
-import type { Booking, BookingFormData } from "./booking.type";
+import type { BookingFormData } from "./booking.type";
 
 export const bookingsApi = {
     // Get all bookings

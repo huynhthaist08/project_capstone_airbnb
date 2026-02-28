@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 
 import type { SignInFormType } from '@/pages/SignInPage/schema'
 import { setCredentials } from '@/store/auth.slice'
-import { PRIVATE_PATH, PUBLIC_PATH } from '@/routes/path'
+import { PRIVATE_PATH } from '@/routes/path'
 import { useAuth } from '@/context/AuthContext'
 
 export const useAdminSignInForm = () => {

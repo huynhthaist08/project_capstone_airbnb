@@ -2,7 +2,6 @@
  * AdminBookingsPage: trang admin quản lý đặt phòng — bảng danh sách đặt phòng (phân trang client), xóa đặt phòng; gọi API dat-phong.
  */
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import {
     BookingsTable,
     BookingsPagination,
@@ -33,7 +32,6 @@ const AdminBookingsPage = () => {
     const [form, setForm] = useState<BookingFormData>(getDefaultFormState());
 
     const pageSize = 10;
-    const queryClient = useQueryClient();
 
     // Hooks
     const { bookingList, totalPage } = useGetAdminBookings(pageIndex, pageSize);
