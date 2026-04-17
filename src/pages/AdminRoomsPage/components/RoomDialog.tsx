@@ -19,8 +19,6 @@ interface RoomDialogProps {
     onSubmit: () => void;
     isLoading: boolean;
     locationOptions: Array<{ id: number; label: string }>;
-    editImageFile?: File | null;
-    onImageFileChange?: (file: File | null) => void;
 }
 
 export const RoomDialog = ({
@@ -32,7 +30,6 @@ export const RoomDialog = ({
     onSubmit,
     isLoading,
     locationOptions,
-    onImageFileChange,
 }: RoomDialogProps) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -221,10 +218,7 @@ export const RoomDialog = ({
                             <Input
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0] ?? null;
-                                    onImageFileChange?.(file);
-                                }}
+                                onChange={() => {}}
                             />
                         </div>
                     )}

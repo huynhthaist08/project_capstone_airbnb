@@ -1,5 +1,3 @@
-import { Button } from "@/core/ui/button";
-
 interface BookingsPaginationProps {
     pageIndex: number;
     totalPage: number;

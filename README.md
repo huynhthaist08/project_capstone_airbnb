@@ -118,5 +118,6 @@ Dự án **BC89 - Nhóm 1 - Website đặt phòng Airbnb** là ứng dụng web 
 ```bash
 git clone <URL-REPO-CUA-BAN>
 cd project_capstone_airbnb-demo-01
+
 npm install
 npm run dev

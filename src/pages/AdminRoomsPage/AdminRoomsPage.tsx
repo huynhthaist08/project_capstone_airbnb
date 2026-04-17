@@ -181,8 +181,6 @@ const AdminRoomsPage = () => {
                 onSubmit={handleSubmit}
                 isLoading={isLoading}
                 locationOptions={locationOptions}
-                editImageFile={editImageFile}
-                onImageFileChange={setEditImageFile}
             />
         </div>
     );
