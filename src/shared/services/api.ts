@@ -1,8 +1,6 @@
-/**
- * shared/services/api.ts
- * Instance Axios dùng chung cho mọi API: tự gắn baseURL, tokenCybersoft và Bearer token từ localStorage.
- * Interceptor response chỉ log lỗi (không tự ý clear localStorage hay redirect).
- */
+// Instance Axios dùng chung cho mọi API: tự gắn baseURL, tokenCybersoft và Bearer token từ localStorage.
+// Interceptor response chỉ log lỗi (không tự ý clear localStorage hay redirect).
+
 import { APP_CONFIG } from "@/config";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import axios from "axios";
@@ -14,7 +12,7 @@ apiInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 
     console.log(
-        `📤 API Request: ${config.method?.toUpperCase()} ${APP_CONFIG.BASE_URL}${config.url}`,
+        `API Request: ${config.method?.toUpperCase()} ${APP_CONFIG.BASE_URL}${config.url}`,
         {
             data: config.data,
             headers: config.headers,

@@ -1,6 +1,5 @@
-/**
- * AdminRoomsPage: trang admin quản lý phòng — bảng phân trang + tìm kiếm, thêm/sửa/xóa phòng (form có chọn vị trí); gọi API phong-thue và vi-tri.
- */
+// AdminRoomsPage: trang admin quản lý phòng — bảng phân trang + tìm kiếm, thêm/sửa/xóa phòng (form có chọn vị trí); gọi API phong-thue và vi-tri.
+
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {

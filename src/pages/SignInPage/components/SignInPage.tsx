@@ -1,6 +1,5 @@
-/**
- * SignInPage: trang đăng nhập — form email + mật khẩu (react-hook-form + zod), gọi useSignInForm (API signin + Redux setCredentials), link sang đăng ký.
- */
+// SignInPage: trang đăng nhập — form email + mật khẩu (react-hook-form + zod), gọi useSignInForm (API signin + Redux setCredentials), link sang đăng ký.
+
 import { Button } from "@/core/ui/button";
 import {
     Card,
@@ -76,7 +75,11 @@ const SignInPage = () => {
                                     <div className="relative">
                                         <Input
                                             id="password"
-                                            type={showPassword ? "text" : "password"}
+                                            type={
+                                                showPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
                                             placeholder="Mật khẩu"
                                             className="pr-10"
                                             {...register("password")}

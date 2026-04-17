@@ -1,8 +1,6 @@
-/**
- * routes/AdminRoute.tsx
- * Component bảo vệ khu vực admin: chỉ cho phép user có role === "ADMIN" truy cập.
- * Nếu không đủ quyền sẽ hiện toast và redirect về trang chủ client.
- */
+// Component bảo vệ khu vực admin: chỉ cho phép user có role === "ADMIN" truy cập.
+// Nếu không đủ quyền sẽ hiện toast và redirect về trang chủ client.
+
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
@@ -51,4 +49,3 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
 };
 
 export default AdminRoute;
-

@@ -1,6 +1,5 @@
-/**
- * AdminLocationsPage: trang admin quản lý vị trí — bảng phân trang + tìm kiếm, thêm/sửa/xóa vị trí qua dialog; gọi API vi-tri (LOCATION).
- */
+// AdminLocationsPage: trang admin quản lý vị trí — bảng phân trang + tìm kiếm, thêm/sửa/xóa vị trí qua dialog; gọi API vi-tri (LOCATION).
+
 import { Button } from "@/core/ui/button";
 import { Input } from "@/core/ui/input";
 import {
@@ -174,8 +173,7 @@ const AdminLocationsPage = () => {
                                             setEditingLocation(loc);
                                             setForm({
                                                 tenViTri: loc.tenViTri ?? "",
-                                                tinhThanh:
-                                                    loc.tinhThanh ?? "",
+                                                tinhThanh: loc.tinhThanh ?? "",
                                                 quocGia: loc.quocGia ?? "",
                                                 hinhAnh: loc.hinhAnh ?? "",
                                             });
@@ -370,7 +368,9 @@ const AdminLocationsPage = () => {
                                     uploadLocationImage.isPending
                                 }
                             >
-                                {editingLocation ? "Lưu thay đổi" : "Thêm vị trí"}
+                                {editingLocation
+                                    ? "Lưu thay đổi"
+                                    : "Thêm vị trí"}
                             </Button>
                         </DialogFooter>
                     </form>

@@ -11,7 +11,8 @@ const ThemeToggle = () => {
 
     // Khởi tạo theme: ưu tiên localStorage, fallback theo system prefers-color-scheme.
     useEffect(() => {
-        const stored = (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? null;
+        const stored =
+            (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? null;
         if (stored === "light" || stored === "dark") {
             setTheme(stored);
             applyTheme(stored);
@@ -52,7 +53,11 @@ const ThemeToggle = () => {
             type="button"
             onClick={toggleTheme}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm transition hover:bg-accent hover:text-accent-foreground active:scale-95 md:h-10 md:w-10"
-            aria-label={isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
+            aria-label={
+                isDark
+                    ? "Chuyển sang giao diện sáng"
+                    : "Chuyển sang giao diện tối"
+            }
         >
             {isDark ? (
                 <FaSun className="h-4 w-4" />
@@ -64,4 +69,3 @@ const ThemeToggle = () => {
 };
 
 export default ThemeToggle;
-

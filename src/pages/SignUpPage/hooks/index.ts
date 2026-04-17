@@ -1,2 +1,1 @@
-/** Re-export hook useMutaRegister (useSignUpForm). */
-export * from './useSignUpForm'
+export * from "./useSignUpForm";

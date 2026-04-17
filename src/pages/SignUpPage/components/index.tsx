@@ -1,2 +1,1 @@
-/** Re-export component SignUpPage. */
-export * from "./SignUpPage";
+export * from "./SignUpPage.jsx";

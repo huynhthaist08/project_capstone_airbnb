@@ -1,14 +1,9 @@
-/**
- * api/users.ts
- * Module gọi API quản lý người dùng: phân trang + tìm kiếm, tạo/sửa/xóa user, upload avatar.
- * Dùng chung cho khu vực Admin (quản lý người dùng).
- */
+// api/users.ts
+// Module gọi API quản lý người dùng: phân trang + tìm kiếm, tạo/sửa/xóa user, upload avatar.
+// Dùng chung cho khu vực Admin (quản lý người dùng).
+
 import apiInstance from "@/shared/services/api";
-import type {
-    PaginatedResponse,
-    User,
-    UserPaginatedParams,
-} from "./user.type";
+import type { PaginatedResponse, User, UserPaginatedParams } from "./user.type";
 
 const USERS = {
     // [ADMIN] Lấy danh sách user phân trang + tìm kiếm
@@ -48,4 +43,3 @@ const USERS = {
 };
 
 export default USERS;
-

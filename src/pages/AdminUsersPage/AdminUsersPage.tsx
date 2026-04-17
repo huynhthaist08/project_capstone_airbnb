@@ -1,6 +1,5 @@
-/**
- * AdminUsersPage: trang admin quản lý người dùng — bảng phân trang + tìm kiếm, thêm user (dialog), xóa user; gọi API users/phan-trang-tim-kiem, users (POST/DELETE).
- */
+// AdminUsersPage: trang admin quản lý người dùng — bảng phân trang + tìm kiếm, thêm user (dialog), xóa user; gọi API users/phan-trang-tim-kiem, users (POST/DELETE).
+
 import { useState } from "react";
 import type { User } from "./server/user.type";
 import { getPaginatedData } from "@/utils/apiResponse";
@@ -31,7 +30,6 @@ const AdminUsersPage = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
 
-    // Custom hooks for user management
     const { data } = useGetAdminUsers({
         pageIndex,
         pageSize,
@@ -40,12 +38,16 @@ const AdminUsersPage = () => {
 
     const { data: userList, totalPage } = getPaginatedData<User>(data);
 
-    console.log("[PAGE] User list loaded:", { count: userList?.length || 0, totalPage, keyword, pageIndex });
+    console.log("[PAGE] User list loaded:", {
+        count: userList?.length || 0,
+        totalPage,
+        keyword,
+        pageIndex,
+    });
 
     const createUser = useCreateAdminUser();
     const updateUser = useUpdateAdminUser();
     const deleteUser = useDeleteAdminUser();
-
 
     const handleCreateSuccess = () => {
         console.log("Create operation completed, closing dialog");

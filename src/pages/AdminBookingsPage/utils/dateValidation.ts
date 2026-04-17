@@ -1,7 +1,6 @@
-/**
- * Kiểm tra 2 ngày có xung đột không
- * ngayDen1 <= ngayDi2 && ngayDi1 >= ngayDen2
- */
+// Kiểm tra 2 ngày có xung đột không
+// ngayDen1 <= ngayDi2 && ngayDi1 >= ngayDen2
+
 export const hasDateConflict = (
     ngayDen1: string,
     ngayDi1: string,
@@ -11,9 +10,8 @@ export const hasDateConflict = (
     return ngayDen1 <= ngayDi2 && ngayDi1 >= ngayDen2;
 };
 
-/**
- * Lấy danh sách ngày bị kín của một phòng
- */
+// Lấy danh sách ngày bị kín của một phòng
+
 export const getBookedDates = (
     bookings: Array<{ ngayDen: string; ngayDi: string }>,
 ): string[] => {
@@ -32,16 +30,14 @@ export const getBookedDates = (
     return Array.from(bookedDates).sort();
 };
 
-/**
- * Kiểm tra xem ngày có bị kín không
- */
+// Kiểm tra xem ngày có bị kín không
+
 export const isDateBooked = (date: string, bookedDates: string[]): boolean => {
     return bookedDates.includes(date);
 };
 
-/**
- * Kiểm tra range ngày có xung đột không
- */
+// Kiểm tra range ngày có xung đột không
+
 export const hasDateRangeConflict = (
     ngayDen: string,
     ngayDi: string,
@@ -53,6 +49,11 @@ export const hasDateRangeConflict = (
         if (excludeBookingId && booking.id === excludeBookingId) {
             return false;
         }
-        return hasDateConflict(ngayDen, ngayDi, booking.ngayDen, booking.ngayDi);
+        return hasDateConflict(
+            ngayDen,
+            ngayDi,
+            booking.ngayDen,
+            booking.ngayDi,
+        );
     });
 };

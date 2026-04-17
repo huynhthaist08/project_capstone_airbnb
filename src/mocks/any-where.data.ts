@@ -1,7 +1,5 @@
-/**
- * mocks/any-where.data.ts
- * Dữ liệu tĩnh cho khối "Ở bất kỳ đâu" trên trang chủ: danh sách loại chỗ ở (toàn bộ nhà, độc đáo, trang trại, thú cưng) kèm ảnh.
- */
+// Dữ liệu tĩnh cho khối "Ở bất kỳ đâu" trên trang chủ: danh sách loại chỗ ở (toàn bộ nhà, độc đáo, trang trại, thú cưng) kèm ảnh.
+
 import anywhere1 from "../assets/images/anywhere-home.avif";
 import anywhere2 from "../assets/images/anywhere-vacation.avif";
 import anywhere3 from "../assets/images/anywhere-farm.avif";

@@ -1,6 +1,5 @@
-/**
- * RoomDetailPage: trang chi tiết phòng — hiển thị ảnh, tên, mô tả, tiện nghi; form đặt phòng (ngày đến/đi, số khách) và danh sách bình luận; dùng useAuth (AuthContext) để lấy user đặt phòng/bình luận.
- */
+// RoomDetailPage: trang chi tiết phòng — hiển thị ảnh, tên, mô tả, tiện nghi; form đặt phòng (ngày đến/đi, số khách) và danh sách bình luận; dùng useAuth (AuthContext) để lấy user đặt phòng/bình luận.
+
 import PHONG_THUE from "@/api/phong-thue";
 import DAT_PHONG from "@/api/dat-phong";
 import BINH_LUAN from "@/api/binh-luan";
@@ -14,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/core/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { getAny, getContent, getContentArray } from "@/utils/apiResponse";
 import type { Booking } from "@/types/booking.type";
-import { toast } from 'sonner'
+import { toast } from "sonner";
 const RoomDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const roomId = Number(id);
@@ -96,7 +95,9 @@ const RoomDetailPage = () => {
 
     // Lấy danh sách booking của phòng này
     const allBookings = getContentArray<Booking>(allBookingsRes);
-    const roomBookings = allBookings.filter((b: Booking) => b.maPhong === roomId);
+    const roomBookings = allBookings.filter(
+        (b: Booking) => b.maPhong === roomId,
+    );
 
     // Hàm kiểm tra xem ngày có bị trùng với booking nào không
     const checkDateConflict = (checkIn: string, checkOut: string): boolean => {
@@ -107,7 +108,7 @@ const RoomDetailPage = () => {
             const bookedCheckIn = new Date(booking.ngayDen);
             const bookedCheckOut = new Date(booking.ngayDi);
 
-            // Kiểm tra overlap: 
+            // Kiểm tra overlap:
             // Trùng nếu: (checkIn < bookedCheckOut) && (checkOut > bookedCheckIn)
             if (checkInDate < bookedCheckOut && checkOutDate > bookedCheckIn) {
                 return true; // Có conflict
@@ -131,7 +132,9 @@ const RoomDetailPage = () => {
 
         // Kiểm tra xem có trùng lịch với booking nào không
         if (checkDateConflict(ngayDen, ngayDi)) {
-            setBookingError("Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.");
+            setBookingError(
+                "Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.",
+            );
         } else {
             setBookingError("");
         }
@@ -170,8 +173,13 @@ const RoomDetailPage = () => {
 
     const handleBook = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("🔍 handleBook called", { user, ngayDen, ngayDi, soLuongKhach });
-        
+        console.log("🔍 handleBook called", {
+            user,
+            ngayDen,
+            ngayDi,
+            soLuongKhach,
+        });
+
         if (!user) {
             setBookingError("Vui lòng đăng nhập để đặt phòng.");
             console.log(" User not logged in");
@@ -182,10 +190,11 @@ const RoomDetailPage = () => {
         if (user.role !== "USER") {
             setBookingError("Tài khoản admin không thể đặt phòng.");
             console.log(" Admin cannot book rooms");
-            toast.error('Người dùng chưa đăng nhập tài khoản. Vui lòng đăng nhập bằng tài khoản người dùng để đặt phòng.')
+            toast.error(
+                "Người dùng chưa đăng nhập tài khoản. Vui lòng đăng nhập bằng tài khoản người dùng để đặt phòng.",
+            );
             return;
         }
-       
 
         if (!ngayDen || !ngayDi) {
             setBookingError("Vui lòng chọn ngày đến và ngày đi.");
@@ -202,7 +211,9 @@ const RoomDetailPage = () => {
 
         // Kiểm tra xem có trùng lịch với booking nào không
         if (checkDateConflict(ngayDen, ngayDi)) {
-            setBookingError("Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.");
+            setBookingError(
+                "Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.",
+            );
             console.log("    Date conflict with existing booking");
             return;
         }
@@ -375,9 +386,7 @@ const RoomDetailPage = () => {
                                                     ? "default"
                                                     : "outline"
                                             }
-                                            onClick={() =>
-                                                setCurrentPage(page)
-                                            }
+                                            onClick={() => setCurrentPage(page)}
                                         >
                                             {page}
                                         </Button>
@@ -394,10 +403,7 @@ const RoomDetailPage = () => {
                                         disabled={currentPage === totalPages}
                                         onClick={() =>
                                             setCurrentPage((prev) =>
-                                                Math.min(
-                                                    totalPages,
-                                                    prev + 1,
-                                                ),
+                                                Math.min(totalPages, prev + 1),
                                             )
                                         }
                                     >
@@ -454,7 +460,10 @@ const RoomDetailPage = () => {
                                             disabled={soLuongKhach === 1}
                                             onClick={() =>
                                                 setSoLuongKhach(
-                                                    Math.max(1, soLuongKhach - 1),
+                                                    Math.max(
+                                                        1,
+                                                        soLuongKhach - 1,
+                                                    ),
                                                 )
                                             }
                                             className="w-10 h-10 p-0"
@@ -475,7 +484,10 @@ const RoomDetailPage = () => {
                                             disabled={soLuongKhach >= khach}
                                             onClick={() =>
                                                 setSoLuongKhach(
-                                                    Math.min(khach, soLuongKhach + 1),
+                                                    Math.min(
+                                                        khach,
+                                                        soLuongKhach + 1,
+                                                    ),
                                                 )
                                             }
                                             className="w-10 h-10 p-0"
@@ -485,7 +497,9 @@ const RoomDetailPage = () => {
                                     </div>
                                     {soLuongKhach >= khach && (
                                         <p className="text-sm text-destructive">
-                                            Số lượng khách tối đa của phòng là {khach} khách, không thể đặt nhiều hơn.
+                                            Số lượng khách tối đa của phòng là{" "}
+                                            {khach} khách, không thể đặt nhiều
+                                            hơn.
                                         </p>
                                     )}
                                 </div>
@@ -539,15 +553,23 @@ const RoomDetailPage = () => {
                                 <Button
                                     type="submit"
                                     className="w-full"
-                                    disabled={createBooking.isPending || !user || !!bookingError}
+                                    disabled={
+                                        createBooking.isPending ||
+                                        !user ||
+                                        !!bookingError
+                                    }
                                     onClick={() => {
                                         console.log("🔘 Button clicked", {
-                                            user: user ? `${user.name} (ID: ${user.id})` : "NOT LOGGED IN",
+                                            user: user
+                                                ? `${user.name} (ID: ${user.id})`
+                                                : "NOT LOGGED IN",
                                             ngayDen,
                                             ngayDi,
                                             soLuongKhach,
                                             isPending: createBooking.isPending,
-                                            disabled: createBooking.isPending || !user,
+                                            disabled:
+                                                createBooking.isPending ||
+                                                !user,
                                         });
                                     }}
                                 >

@@ -1,8 +1,6 @@
-/**
- * api/auth.ts
- * Module gọi API xác thực: đăng ký (signup) và đăng nhập (signin).
- * Dùng chung apiInstance nên mọi request đều có baseURL, TokenCybersoft và Bearer token (nếu đã login).
- */
+// Module gọi API xác thực: đăng ký và đăng nhập
+// Dùng chung apiInstance nên mọi request đều có baseURL, TokenCybersoft và Bearer token (nếu đã login).
+
 import type {
     AuthResponse,
     SignInPayload,

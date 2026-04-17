@@ -8,7 +8,6 @@ export interface SignUpPayload {
 }
 
 export interface SignInPayload {
-    // API /auth/signin hiện sử dụng email + password cho đăng nhập.
     email: string;
     password: string;
 }

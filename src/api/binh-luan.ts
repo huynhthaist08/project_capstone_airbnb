@@ -1,8 +1,6 @@
-/**
- * api/binh-luan.ts
- * Module gọi API bình luận: lấy theo phòng, tạo/sửa/xóa bình luận.
- * API backend dùng maNguoiBinhLuan nên có map từ maNguoiDung khi gửi.
- */
+// Module gọi API bình luận: lấy theo phòng, tạo/sửa/xóa bình luận.
+// API backend dùng maNguoiBinhLuan nên có map từ maNguoiDung khi gửi.
+
 import type { Comment, CreateCommentPayload } from "@/types/comment.type";
 import apiInstance from "@/shared/services/api";
 

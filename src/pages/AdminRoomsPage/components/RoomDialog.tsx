@@ -8,7 +8,6 @@ import {
     DialogTitle,
 } from "@/core/ui/dialog";
 import { Label } from "@/core/ui/label";
-import { useState, useEffect } from "react";
 import type { Room, RoomFormData } from "../server";
 
 interface RoomDialogProps {
@@ -33,7 +32,6 @@ export const RoomDialog = ({
     onSubmit,
     isLoading,
     locationOptions,
-    editImageFile,
     onImageFileChange,
 }: RoomDialogProps) => {
     const handleSubmit = (e: React.FormEvent) => {
@@ -300,7 +298,9 @@ export const RoomDialog = ({
                                     type="checkbox"
                                     id="wifi"
                                     checked={form.wifi}
-                                    onChange={() => handleCheckboxChange("wifi")}
+                                    onChange={() =>
+                                        handleCheckboxChange("wifi")
+                                    }
                                     className="w-4 h-4"
                                 />
                                 <label htmlFor="wifi" className="text-sm">

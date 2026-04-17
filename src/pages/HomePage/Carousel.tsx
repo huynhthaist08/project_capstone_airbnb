@@ -1,6 +1,5 @@
-/**
- * Carousel (CarouselBanner): khối carousel banner trang chủ — mỗi slide 2 ảnh (trái/phải), dữ liệu từ banner-carousel.data.
- */
+// Carousel (CarouselBanner): khối carousel banner trang chủ — mỗi slide 2 ảnh (trái/phải), dữ liệu từ banner-carousel.data.
+
 import { bannerCarouselData } from "@/mocks/banner-carousel.data";
 
 import {

@@ -1,8 +1,6 @@
-/**
- * context/AuthContext.tsx
- * Context cung cấp trạng thái đăng nhập (user, token) và hàm login/signup/logout/setUser.
- * Chỉ sử dụng token thật trả về từ backend và lưu dưới một key duy nhất "access_token".
- */
+// Context cung cấp trạng thái đăng nhập (user, token) và hàm login/signup/logout/setUser.
+// Chỉ sử dụng token thật trả về từ backend và lưu dưới một key duy nhất "access_token".
+
 import React, {
     createContext,
     useCallback,
@@ -11,7 +9,8 @@ import React, {
     useState,
 } from "react";
 import AUTH_API from "@/api/auth";
-import type { User } from "@/types/user.type";
+// import type { User } from "@/types/user.type";
+import type { User } from "@/pages/AdminUsersPage/server";
 import { STORAGE_KEYS, AUTH_USER_KEY } from "@/constants";
 
 // Sử dụng DUY NHẤT key "access_token" để lưu token trong localStorage
@@ -67,43 +66,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
-    const login = useCallback(
-        async (email: string, password: string) => {
-            // Luôn gọi API backend thật /auth/signin để lấy token JWT hợp lệ
-            const res = await AUTH_API.signin({ email, password });
-            const data = res.data?.content ?? res.data;
-            const token =
-                (data as { accessToken?: string; token?: string })
-                    .accessToken ??
-                (data as { accessToken?: string; token?: string }).token;
-            const userRaw = (data as { user?: User }).user ?? data;
-            const user: User = {
-                id: (userRaw as { id: number }).id,
-                name:
-                    (userRaw as { name?: string }).name ??
-                    (userRaw as { hoTen?: string }).hoTen ??
-                    "",
-                email: (userRaw as { email: string }).email ?? "",
-                phone:
-                    (userRaw as { soDt?: string }).soDt ??
-                    (userRaw as { phone?: string }).phone,
-                avatar: (userRaw as { avatar?: string }).avatar,
-                role: (userRaw as { role?: string }).role,
-            };
-            if (!token) {
-                throw new Error("Đăng nhập thất bại");
-            }
+    const login = useCallback(async (email: string, password: string) => {
+        // Luôn gọi API backend thật /auth/signin để lấy token JWT hợp lệ
+        const res = await AUTH_API.signin({ email, password });
+        const data = res.data?.content ?? res.data;
+        const token =
+            (data as { accessToken?: string; token?: string }).accessToken ??
+            (data as { accessToken?: string; token?: string }).token;
+        const userRaw = (data as { user?: User }).user ?? data;
+        const user: User = {
+            id: (userRaw as { id: number }).id,
+            name:
+                (userRaw as { name?: string }).name ??
+                (userRaw as { hoTen?: string }).hoTen ??
+                "",
+            email: (userRaw as { email: string }).email ?? "",
+            phone:
+                (userRaw as { soDt?: string }).soDt ??
+                (userRaw as { phone?: string }).phone,
+            avatar: (userRaw as { avatar?: string }).avatar,
+            role: (userRaw as { role?: string }).role,
+        };
+        if (!token) {
+            throw new Error("Đăng nhập thất bại");
+        }
 
-            // Lưu token và user vào localStorage với key chuẩn hóa
-            localStorage.setItem(ACCESS_TOKEN_KEY, token);
-            localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
-            setState({ user, token, isReady: true });
+        // Lưu token và user vào localStorage với key chuẩn hóa
+        localStorage.setItem(ACCESS_TOKEN_KEY, token);
+        localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+        setState({ user, token, isReady: true });
 
-            // Trả token + user để các hook khác (Redux, UI) sử dụng lại mà không cần gọi API lần 2.
-            return { token, user };
-        },
-        [],
-    );
+        // Trả token + user để các hook khác (Redux, UI) sử dụng lại mà không cần gọi API lần 2.
+        return { token, user };
+    }, []);
 
     const signup = useCallback(
         async (payload: {

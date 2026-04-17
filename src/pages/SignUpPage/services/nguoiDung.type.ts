@@ -1,4 +1,4 @@
-/** Kiểu User và payload gửi API đăng ký (taiKhoan, matKhau, hoTen, email, soDt). */
+// Kiểu User và payload gửi API đăng ký (taiKhoan, matKhau, hoTen, email, soDt).
 export type SignUp = {
     id: number;
     name: string;

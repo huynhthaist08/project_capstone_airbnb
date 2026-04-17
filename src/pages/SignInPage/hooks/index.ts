@@ -1,2 +1,1 @@
-/** Re-export hook useSignInForm. */
-export * from './useSignInForm'
+export * from "./useSignInForm";

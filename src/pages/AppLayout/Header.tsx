@@ -1,6 +1,5 @@
-/**
- * Header: thanh điều hướng trên cùng — logo, nav (Nơi lưu trú, Trải nghiệm, Dịch vụ), link "Trở thành chủ nhà", dropdown đăng nhập/đăng ký.
- */
+// Header: thanh điều hướng trên cùng — logo, nav (Nơi lưu trú, Trải nghiệm, Dịch vụ), link "Trở thành chủ nhà", dropdown đăng nhập/đăng ký.
+
 import { PUBLIC_PATH } from "@/routes/path";
 import { Link, NavLink } from "react-router-dom";
 import { FaHouse, FaParachuteBox, FaPersonRays, FaBars } from "react-icons/fa6";
@@ -44,9 +43,7 @@ const Header = () => {
 
     return (
         <div className="shadow bg-(--color-bg-header) text-black">
-            <header
-                className="container mx-auto flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-            >
+            <header className="container mx-auto flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center justify-between gap-3">
                     <Link
                         className="text-2xl font-bold text-[#ff385c]"
@@ -63,9 +60,7 @@ const Header = () => {
                     <button
                         type="button"
                         className="flex h-9 w-9 items-center justify-center rounded-full border bg-white text-black shadow-sm sm:hidden"
-                        onClick={() =>
-                            setIsMobileActionsOpen((open) => !open)
-                        }
+                        onClick={() => setIsMobileActionsOpen((open) => !open)}
                         aria-label="Mở menu tài khoản"
                     >
                         <FaBars className="h-4 w-4" />
@@ -108,7 +103,6 @@ const Header = () => {
                 </div>
             </header>
 
-            
             {isMobileActionsOpen && (
                 <div className="fixed inset-0 z-40 flex sm:hidden">
                     <div className="w-64 bg-white shadow-xl p-4 flex flex-col gap-4">

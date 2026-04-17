@@ -1,7 +1,5 @@
-/**
- * mocks/footer.data.ts
- * Dữ liệu tĩnh cho footer: các nhóm link (Giới thiệu, Cộng đồng, Đón tiếp khách, Hỗ trợ).
- */
+// Dữ liệu tĩnh cho footer: các nhóm link (Giới thiệu, Cộng đồng, Đón tiếp khách, Hỗ trợ).
+
 export const gioiThieu = [
     { id: 1, title: "Phương thức hoạt động của Airbnb" },
     { id: 2, title: "Trang tin tức" },

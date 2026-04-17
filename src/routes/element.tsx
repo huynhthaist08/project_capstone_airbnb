@@ -1,7 +1,5 @@
-/**
- * routes/element.tsx
- * Định nghĩa cấu hình router (createBrowserRouter): layout chính (AppLayout) với các route con công khai (home, đăng ký/đăng nhập, trải nghiệm, dịch vụ, phòng theo vị trí, chi tiết phòng); layout admin với các route quản lý; và 404.
- */
+// Định nghĩa cấu hình router (createBrowserRouter): layout chính (AppLayout) với các route con công khai (home, đăng ký/đăng nhập, trải nghiệm, dịch vụ, phòng theo vị trí, chi tiết phòng); layout admin với các route quản lý; và 404.
+
 import AppLayout from "@/pages/AppLayout/AppLayout";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PRIVATE_PATH, PUBLIC_PATH } from "./path";

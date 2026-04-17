@@ -1,6 +1,5 @@
-/**
- * SignUpPage: trang đăng ký — form đầy đủ (tên, email, mật khẩu, xác nhận mật khẩu, SĐT, ngày sinh, giới tính), react-hook-form + zod, gọi useMutaRegister; có modal thành công và link sang đăng nhập.
- */
+// SignUpPage: trang đăng ký — form đầy đủ (tên, email, mật khẩu, xác nhận mật khẩu, SĐT, ngày sinh, giới tính), react-hook-form + zod, gọi useMutaRegister; có modal thành công và link sang đăng nhập.
+
 import { Link } from "react-router-dom";
 import { Button } from "@/core/ui/button";
 import { Input } from "@/core/ui/input";
@@ -107,7 +106,9 @@ const SignUpPage = () => {
                                 <div className="relative">
                                     <Input
                                         id="password"
-                                        type={showPassword ? "text" : "password"}
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
                                         placeholder="Mật khẩu"
                                         className="pr-10"
                                         {...register("password")}
@@ -195,7 +196,7 @@ const SignUpPage = () => {
                                 <Input
                                     id="birthday"
                                     type="date"
-                                    max={new Date().toISOString().split('T')[0]}
+                                    max={new Date().toISOString().split("T")[0]}
                                     {...register("birthday")}
                                 />
                                 {errors.birthday && (

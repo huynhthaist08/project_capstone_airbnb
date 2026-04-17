@@ -1,11 +1,9 @@
-/**
- * api/phong-thue.ts
- * Module gọi API phòng thuê: lấy danh sách, theo vị trí, phân trang, CRUD, upload ảnh.
- * Dùng cho trang chủ, trang phòng theo vị trí, chi tiết phòng và admin quản lý phòng.
- */
-import apiInstance from "@/shared/services/api";
+// Module gọi API phòng thuê: lấy danh sách, theo vị trí, phân trang, CRUD, upload ảnh.
+// Dùng cho trang chủ, trang phòng theo vị trí, chi tiết phòng và admin quản lý phòng.
 
-import type { PaginatedResponse } from "@/types/user.type";
+import apiInstance from "@/shared/services/api";
+// import type { PaginatedResponse } from "@/types/user.type";
+import type { PaginatedResponse } from "@/pages/AdminUsersPage/server";
 import { createQueryString } from "@/utils/createQueryString";
 import type {
     Room,
@@ -36,6 +34,7 @@ const PHONG_THUE = {
     update: (id: number, data: Partial<Room>) =>
         apiInstance.put(`/phong-thue/${id}`, data),
     delete: (id: number) => apiInstance.delete(`/phong-thue/${id}`),
+    
     // [ADMIN] Upload hình phòng theo endpoint /phong-thue/upload-hinh-phong?maPhong={id}
     uploadImage: (id: number, file: File) => {
         const formData = new FormData();

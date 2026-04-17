@@ -1,8 +1,6 @@
-/**
- * store/auth.slice.ts
- * Redux slice quản lý trạng thái đăng nhập: token + user. Khởi tạo từ localStorage (access_token, auth_user).
- * Actions: setCredentials (sau login), updateUser, logout. Dùng cho Header/DropDown và các màn cần biết user đã login chưa.
- */
+// Redux slice quản lý trạng thái đăng nhập: token + user. Khởi tạo từ localStorage (access_token, auth_user).
+// Actions: setCredentials (sau login), updateUser, logout. Dùng cho Header/DropDown và các màn cần biết user đã login chưa.
+
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { STORAGE_KEYS, AUTH_USER_KEY } from "@/constants";
 

@@ -1,8 +1,6 @@
-/**
- * utils/apiResponse.tsx
- * Hàm chuẩn hóa response từ API Cybersoft (format không thống nhất: content/data, có thể lồng nhau).
- * getContent: lấy object đơn. getContentArray: lấy mảng. getPaginatedData: lấy data phân trang. getAny: lấy field theo nhiều tên key (camel/snake).
- */
+// Hàm chuẩn hóa response từ API Cybersoft (format không thống nhất: content/data, có thể lồng nhau).
+// getContent: lấy object đơn. getContentArray: lấy mảng. getPaginatedData: lấy data phân trang. getAny: lấy field theo nhiều tên key (camel/snake).
+
 import type { AxiosResponse } from "axios";
 
 export function getContent<T>(

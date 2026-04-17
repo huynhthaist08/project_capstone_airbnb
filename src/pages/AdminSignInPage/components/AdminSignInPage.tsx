@@ -1,8 +1,7 @@
-/**
- * Hiển thị UI form login
- * AdminSignInPage: trang đăng nhập riêng cho admin — reuse UI pattern từ SignInPage
- * UI: Dark theme (darker, more professional)
- */
+// Hiển thị UI form login
+// AdminSignInPage: trang đăng nhập riêng cho admin — reuse UI pattern từ SignInPage
+// UI: Dark theme (darker, more professional)
+
 import { Button } from "@/core/ui/button";
 import {
     Card,
@@ -37,7 +36,7 @@ const AdminSignInPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-950 to-slate-900">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-linear-to-br from-slate-950 to-slate-900">
             <div className="w-full max-w-md">
                 <Card className="border-slate-700 bg-slate-900">
                     <CardHeader>
@@ -56,7 +55,10 @@ const AdminSignInPage = () => {
                         >
                             {/* Email */}
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="text-slate-300">
+                                <Label
+                                    htmlFor="email"
+                                    className="text-slate-300"
+                                >
                                     Email
                                 </Label>
                                 <Input
@@ -75,7 +77,10 @@ const AdminSignInPage = () => {
 
                             {/* Password */}
                             <div className="space-y-2">
-                                <Label htmlFor="password" className="text-slate-300">
+                                <Label
+                                    htmlFor="password"
+                                    className="text-slate-300"
+                                >
                                     Mật khẩu
                                 </Label>
                                 <div className="relative">
@@ -131,7 +136,8 @@ const AdminSignInPage = () => {
                 <div className="text-center mt-6 text-slate-500 text-sm">
                     <p>Chỉ dành cho quản trị viên</p>
                     <p className="mt-2 text-xs text-slate-600">
-                        Nếu bạn không phải admin, vui lòng <strong>không tiếp tục</strong>
+                        Nếu bạn không phải admin, vui lòng{" "}
+                        <strong>không tiếp tục</strong>
                     </p>
                 </div>
             </div>

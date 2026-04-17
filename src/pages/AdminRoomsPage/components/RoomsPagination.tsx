@@ -1,5 +1,3 @@
-import { Button } from "@/core/ui/button";
-
 interface RoomsPaginationProps {
     pageIndex: number;
     totalPage: number;

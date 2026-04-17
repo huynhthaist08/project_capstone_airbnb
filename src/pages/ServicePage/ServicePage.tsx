@@ -1,6 +1,5 @@
-/**
- * ServicePage: trang Dịch vụ — danh sách loại dịch vụ (Chụp ảnh, Đầu bếp, ...) và section với ảnh trượt ngang (picsum placeholder).
- */
+// ServicePage: trang Dịch vụ — danh sách loại dịch vụ (Chụp ảnh, Đầu bếp, ...) và section với ảnh trượt ngang (picsum placeholder).
+
 import { useMemo } from "react";
 import { FaArrowRight, FaHeart, FaRegStar } from "react-icons/fa6";
 

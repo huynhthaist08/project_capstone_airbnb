@@ -1,2 +1,1 @@
-/** Entry: export trang đăng nhập (LogInPage) từ components. */
-export { LogInPage } from './components'
+export { LogInPage } from "./components";

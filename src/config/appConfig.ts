@@ -1,7 +1,5 @@
-/**
- * config/appConfig.ts
- * Cấu hình app: chiều cao header, BASE_URL và TOKEN_CYBERSOFT từ .env, tài khoản admin demo (đăng nhập local không gọi API).
- */
+// Cấu hình app: chiều cao header, BASE_URL và TOKEN_CYBERSOFT từ .env, tài khoản admin demo (đăng nhập local không gọi API).
+
 export const APP_CONFIG = {
     headerHeight: 80,
 
